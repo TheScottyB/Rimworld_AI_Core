@@ -32,10 +32,10 @@ namespace RimAI.Core.Source.Modules.World.Parts
                     IntVec3 spot = DropCellFinder.TradeDropSpot(map);
                     var things = ThingSetMakerDefOf.ResourcePod.root.Generate();
                     foreach (var t in things)
-                    { try { t.stackCount = Mathf.Max(1, Mathf.CeilToInt(t.stackCount * quantityCoefficient)); } catch { } }
-                    try { DropPodUtility.DropThingsNear(spot, map, things, 110, canInstaDropDuringInit: false, leaveSlag: false, canRoofPunch: true, forbid: true); } catch { }
+                    { try { t.stackCount = Mathf.Max(1, Mathf.CeilToInt(t.stackCount * quantityCoefficient)); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } }
+                    try { DropPodUtility.DropThingsNear(spot, map, things, 110, canInstaDropDuringInit: false, leaveSlag: false, canRoofPunch: true, forbid: true); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 return Task.CompletedTask;
             }, name: "World.DropUnknownCivGift", ct: cts.Token);
         }

@@ -48,7 +48,7 @@ namespace RimAI.Core.Source.Modules.Persona.Ideology
 					UserInput = string.Empty
 				};
 				var prompt = await prompting.BuildAsync(req, cts.Token).ConfigureAwait(false);
-				try { Verse.Log.Message("[RimAI.Core][P7] Persona Ideology Payload\nconv=" + req.ConvKey + "\n--- System ---\n" + (prompt?.SystemPrompt ?? string.Empty) + "\n--- User ---\n" + (prompt?.UserPrefixedInput ?? string.Empty)); } catch { }
+				try { Verse.Log.Message("[RimAI.Core][P7] Persona Ideology Payload\nconv=" + req.ConvKey + "\n--- System ---\n" + (prompt?.SystemPrompt ?? string.Empty) + "\n--- User ---\n" + (prompt?.UserPrefixedInput ?? string.Empty)); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				var msgs = new System.Collections.Generic.List<ChatMessage>();
 				msgs.Add(new ChatMessage { Role = "system", Content = prompt?.SystemPrompt ?? string.Empty });
 				if (!string.IsNullOrWhiteSpace(prompt?.UserPrefixedInput)) msgs.Add(new ChatMessage { Role = "user", Content = prompt.UserPrefixedInput });

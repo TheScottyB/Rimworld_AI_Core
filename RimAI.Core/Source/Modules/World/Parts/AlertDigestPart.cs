@@ -39,7 +39,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                 }
 
                 // 驱动 UI 更新一次，确保 activeAlerts 刷新
-                try { Find.Alerts.AlertsReadoutUpdate(); } catch { }
+                try { Find.Alerts.AlertsReadoutUpdate(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                 var items = new List<AlertItem>();
 
@@ -59,7 +59,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         items.Add(new AlertItem { Id = id, Label = label, Severity = sev, Hint = hint });
                     }
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                 // 排序：Critical > High > Medium，其次 Label
                 int Rank(string s) => s == "critical" ? 2 : s == "high" ? 1 : 0;
@@ -72,7 +72,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
             }
             catch (Exception ex)
             {
-                try { Log.Warning($"[RimAI.Core] Alert digest failed: {ex.Message}"); } catch { }
+                try { Log.Warning($"[RimAI.Core] Alert digest failed: {ex.Message}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 return new AlertDigestSnapshot { Alerts = Array.Empty<AlertItem>() };
             }
         }
@@ -93,15 +93,15 @@ namespace RimAI.Core.Source.Modules.World.Parts
 
         private static string SafeLabel(Alert a)
         {
-            try { return a.Label; } catch { }
-            try { return a.GetLabel(); } catch { }
+            try { return a.Label; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+            try { return a.GetLabel(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             return a?.GetType()?.Name ?? "alert";
         }
 
         private static string SafeExplanation(Alert a)
         {
-            try { return a.GetExplanation().Resolve(); } catch { }
-            try { return a.GetLabel(); } catch { }
+            try { return a.GetExplanation().Resolve(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+            try { return a.GetLabel(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             return null;
         }
     }

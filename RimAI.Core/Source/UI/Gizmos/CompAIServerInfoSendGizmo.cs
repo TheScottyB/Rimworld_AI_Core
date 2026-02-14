@@ -32,7 +32,7 @@ namespace RimAI.Core.Source.UI.Gizmos
                         // 打开 ServerChatWindow 针对该服务器的会话（让窗口在后台解析真实等级并更新记录）
                         Find.WindowStack.Add(new RimAI.Core.Source.UI.ServerChatWindow.ServerChatWindow(entityId));
                     }
-                    catch { }
+                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 }
             };
         }

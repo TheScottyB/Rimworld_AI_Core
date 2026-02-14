@@ -29,7 +29,7 @@ namespace RimAI.Core.Source.Modules.Prompting.Composers.Server
                     }
                 }
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             return Task.FromResult(new ComposerOutput { SystemLines = System.Array.Empty<string>(), ContextBlocks = blocks });
         }
 
@@ -51,7 +51,7 @@ namespace RimAI.Core.Source.Modules.Prompting.Composers.Server
                         if (!string.IsNullOrWhiteSpace(t)) app = t.Replace("议题：", string.Empty).Replace("Tool Result", string.Empty).Trim();
                     }
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 if (string.IsNullOrWhiteSpace(app)) app = "工具";
                 // Build user prompt; include a concise mention that the raw JSON is attached below
                 var user = loc?.Format(locale, "ui.server.inspection.user", new Dictionary<string,string>{{"app", app},{"result","JSON"}}, "You invoked {app}; its JSON will follow below. Please write an in-character inspection record. The result is: {result}")

@@ -40,7 +40,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
 					var def = kv.Key; var count = kv.Value;
 					if (def == null || count <= 0) continue;
 					if (!def.IsMedicine) continue;
-					float potency = 0f; try { potency = def.statBases?.FirstOrDefault(s => s.stat == StatDefOf.MedicalPotency)?.value ?? 0f; } catch { }
+					float potency = 0f; try { potency = def.statBases?.FirstOrDefault(s => s.stat == StatDefOf.MedicalPotency)?.value ?? 0f; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					total += count;
 					list.Add(new MedicineItemInfo { DefName = def.defName, Label = def.label ?? def.defName, Count = count, Potency = potency });
 				}
@@ -50,7 +50,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
 				{
 					if (e.Def == null) continue;
 					if (list.Any(x => x.DefName == e.Def.defName)) continue;
-					float potency = 0f; try { potency = e.Def.statBases?.FirstOrDefault(s => s.stat == StatDefOf.MedicalPotency)?.value ?? 0f; } catch { }
+					float potency = 0f; try { potency = e.Def.statBases?.FirstOrDefault(s => s.stat == StatDefOf.MedicalPotency)?.value ?? 0f; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					total += e.Count;
 					list.Add(new MedicineItemInfo { DefName = e.Def.defName, Label = e.Def.label ?? e.Def.defName, Count = e.Count, Potency = potency });
 				}

@@ -71,15 +71,15 @@ namespace RimAI.Core.Source.Modules.World.Parts
                     bool seasonOk = true;
                     var notes = new List<string>();
 
-                    try { predator = raceProps.predator; } catch { }
-                    try { herd = raceProps.herdAnimal; } catch { }
-                    try { pack = raceProps.packAnimal; } catch { }
-                    try { isInsect = def.race.Insect; } catch { }
-                    try { bodySize = raceProps.baseBodySize; } catch { }
-                    try { wildness = def.GetStatValueAbstract(StatDefOf.Wildness); } catch { }
-                    try { meatPer = def.GetStatValueAbstract(StatDefOf.MeatAmount); } catch { }
-                    try { leatherPer = def.GetStatValueAbstract(StatDefOf.LeatherAmount); } catch { }
-                    try { leatherDef = raceProps.leatherDef?.defName; } catch { }
+                    try { predator = raceProps.predator; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                    try { herd = raceProps.herdAnimal; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                    try { pack = raceProps.packAnimal; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                    try { isInsect = def.race.Insect; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                    try { bodySize = raceProps.baseBodySize; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                    try { wildness = def.GetStatValueAbstract(StatDefOf.Wildness); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                    try { meatPer = def.GetStatValueAbstract(StatDefOf.MeatAmount); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                    try { leatherPer = def.GetStatValueAbstract(StatDefOf.LeatherAmount); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                    try { leatherDef = raceProps.leatherDef?.defName; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                     // 复仇几率（受伤）
                     try { manhunter = PawnUtility.GetManhunterOnDamageChance(def); } catch { manhunter = 0f; }
@@ -94,7 +94,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                             explosive = true;
                         }
                     }
-                    catch { }
+                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                     // 季节是否合适（是否当前季节可自然出现）
                     try { seasonOk = map.mapTemperature.SeasonAcceptableFor(def); } catch { seasonOk = true; }
@@ -157,7 +157,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
             }
             catch (Exception ex)
             {
-                try { Verse.Log.Warning($"[RimAI.Core] Wildlife opportunities failed: {ex.Message}"); } catch { }
+                try { Verse.Log.Warning($"[RimAI.Core] Wildlife opportunities failed: {ex.Message}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 return new WildlifeOpportunitiesSnapshot { Species = Array.Empty<WildlifeSpeciesGroup>(), Note = "error" };
             }
         }

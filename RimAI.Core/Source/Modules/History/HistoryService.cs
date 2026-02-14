@@ -212,7 +212,7 @@ namespace RimAI.Core.Source.Modules.History
 				_locks.TryRemove(convKey, out _);
 				return true;
 			}
-			finally { try { gate.Release(); } catch { } }
+			finally { try { gate.Release(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } }
 		}
 
 		public bool TryGetEntry(string convKey, string entryId, out HistoryEntry entry)
@@ -278,7 +278,7 @@ namespace RimAI.Core.Source.Modules.History
 					var sp = jo.Value<string>("speaker") ?? string.Empty;
 					role = DeriveRoleFromSpeaker(sp);
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				var e = new HistoryEntry
 				{
 					Id = Guid.NewGuid().ToString("N"),

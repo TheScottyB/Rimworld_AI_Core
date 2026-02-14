@@ -32,7 +32,7 @@ namespace RimAI.Core.Source.Modules.Prompting.Composers.ChatUI
 					lines.Add($"{title} {food}{sep}{rest}{sep}{rec}{sep}{beauty}{sep}{indoors}{sep}{mood}");
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			return new ComposerOutput { SystemLines = lines, ContextBlocks = System.Array.Empty<ContextBlock>() };
 		}
 	}

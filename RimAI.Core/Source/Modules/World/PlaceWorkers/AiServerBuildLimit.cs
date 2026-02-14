@@ -48,7 +48,7 @@ namespace RimAI.Core.Source.Modules.World.PlaceWorkers
 						var bp = t as Blueprint_Build;
 						if (bp != null)
 						{
-							try { if ((bp.def?.entityDefToBuild as ThingDef) == targetDef) count++; } catch { }
+							try { if ((bp.def?.entityDefToBuild as ThingDef) == targetDef) count++; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 						}
 					}
 				}
@@ -62,12 +62,12 @@ namespace RimAI.Core.Source.Modules.World.PlaceWorkers
 						var f = t as Frame;
 						if (f != null)
 						{
-							try { if ((f.def?.entityDefToBuild as ThingDef) == targetDef) count++; } catch { }
+							try { if ((f.def?.entityDefToBuild as ThingDef) == targetDef) count++; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 						}
 					}
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			return count;
 		}
 	}

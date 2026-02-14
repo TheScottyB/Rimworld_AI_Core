@@ -24,7 +24,7 @@ namespace RimAI.Core.Source.Modules.Server
 		public void RestartScheduler(string entityId, int initialDelayTicks = 0)
 		{
 			if (string.IsNullOrWhiteSpace(entityId)) return;
-			if (_periodics.TryRemove(entityId, out var d)) { try { d.Dispose(); } catch { } }
+			if (_periodics.TryRemove(entityId, out var d)) { try { d.Dispose(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } }
 			var rec = GetOrThrow(entityId);
 			if (rec.InspectionEnabled)
 			{
@@ -37,7 +37,7 @@ namespace RimAI.Core.Source.Modules.Server
 			if (string.IsNullOrWhiteSpace(entityId)) return;
 			if (_periodics.ContainsKey(entityId)) return; // 幂等保护：避免重复注册
 			// 全局关闭则不注册周期任务
-			try { var cfg = RimAI.Core.Source.Boot.RimAICoreMod.Container.Resolve<RimAI.Core.Source.Infrastructure.Configuration.ConfigurationService>(); if (cfg != null && !cfg.GetServerConfig().GlobalInspectionEnabled) return; } catch { }
+			try { var cfg = RimAI.Core.Source.Boot.RimAICoreMod.Container.Resolve<RimAI.Core.Source.Infrastructure.Configuration.ConfigurationService>(); if (cfg != null && !cfg.GetServerConfig().GlobalInspectionEnabled) return; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			// 若当前服务器没有任何工具已配置，跳过注册，等首次分配工具时再启动
 			try
 			{
@@ -48,7 +48,7 @@ namespace RimAI.Core.Source.Modules.Server
 					if (!anyTool) return;
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			int everyTicks = Math.Max(6, hours) * 2500;
 			var name = $"server:{entityId}:inspection";
 			try
@@ -56,12 +56,12 @@ namespace RimAI.Core.Source.Modules.Server
 				var disp = _scheduler.SchedulePeriodic(name, everyTicks, async ct =>
 				{
 					try { await RunInspectionOnceAsync(entityId, ct).ConfigureAwait(false); }
-					catch (OperationCanceledException) { }
+					catch (OperationCanceledException ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					catch (Exception ex) { Verse.Log.Error($"[RimAI.Core][P13.Server] periodic failed: {ex.Message}"); }
 				}, appRootCt, initialDelayTicks);
 				_periodics[entityId] = disp;
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 	}
 }

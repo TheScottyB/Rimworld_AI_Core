@@ -23,7 +23,7 @@ namespace RimAI.Core.Source.Modules.Prompting.Composers.Server
                 var text = loc?.Get(locale, "server.inspection.summary.system", fb) ?? fb;
                 if (!string.IsNullOrWhiteSpace(text)) lines.Add(text);
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             return Task.FromResult(new ComposerOutput { SystemLines = lines, ContextBlocks = System.Array.Empty<ContextBlock>() });
         }
     }

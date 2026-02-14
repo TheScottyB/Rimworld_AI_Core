@@ -231,7 +231,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow.Parts
                     _ = System.Threading.Tasks.Task.Run(async () =>
                     {
                         try { await recap.GenerateManualAsync(convKey); }
-                        catch (Exception ex) { try { Verse.Log.Warning($"[RimAI.Core][SCW] Manual recap failed conv={convKey}: {ex.Message}"); } catch { } }
+                        catch (Exception ex) { try { Verse.Log.Warning($"[RimAI.Core][SCW] Manual recap failed conv={convKey}: {ex.Message}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } }
                         finally { _recapGenerating = false; ReloadRecaps(recap, convKey); }
                     });
                 }
@@ -286,7 +286,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow.Parts
                 _recapHandler = (ck, id) => { if (string.Equals(ck, _recapHookedConvKey, StringComparison.Ordinal)) _recapDirty = true; };
                 _recapHooked.OnRecapUpdated += _recapHandler;
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
         }
 
     private void TryUnhookRecapEvent()
@@ -298,7 +298,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow.Parts
                     _recapHooked.OnRecapUpdated -= _recapHandler;
                 }
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             finally
             {
                 _recapHooked = null;
@@ -375,7 +375,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow.Parts
                                 }
                             }
                         }
-                        catch { }
+                        catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                         lock (_convUserName)
                         {
                             _convUserName[convKey] = playerTitle;
@@ -408,7 +408,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow.Parts
                     }
                 }
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             return null;
         }
 

@@ -45,7 +45,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                     quadrum = q.LabelShort();
                     dayOfQuadrum = GenLocalDate.DayOfQuadrum(map);
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                 // 当前天气/风/降水
                 string defName = string.Empty; string label = string.Empty; float rain = 0f; float snow = 0f; float wind = 0f;
@@ -57,13 +57,13 @@ namespace RimAI.Core.Source.Modules.World.Parts
                     rain = wm?.RainRate ?? 0f;
                     snow = wm?.SnowRate ?? 0f;
                 }
-                catch { }
-                try { wind = map.windManager?.WindSpeed ?? 0f; } catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                try { wind = map.windManager?.WindSpeed ?? 0f; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                 // 温度：当前+季节
                 float outdoorNow = 0f; float seasonalNow = 0f;
-                try { outdoorNow = map.mapTemperature?.OutdoorTemp ?? 0f; } catch { }
-                try { seasonalNow = map.mapTemperature?.SeasonalTemp ?? 0f; } catch { }
+                try { outdoorNow = map.mapTemperature?.OutdoorTemp ?? 0f; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                try { seasonalNow = map.mapTemperature?.SeasonalTemp ?? 0f; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                 // 短期趋势：未来 6 小时的每小时室外温度（使用 TileTemperaturesComp.OutdoorTemperatureAt）
                 var temps = new List<float>();
@@ -78,7 +78,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         temps.Add(t);
                     }
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 float minNext = temps.Count > 0 ? temps.Min() : outdoorNow;
                 float maxNext = temps.Count > 0 ? temps.Max() : outdoorNow;
                 string trend = "steady";
@@ -96,7 +96,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                     var conds = map.gameConditionManager?.ActiveConditions ?? new List<GameCondition>();
                     conditionLabels = conds.Select(c => c?.LabelCap ?? c?.def?.label ?? c?.def?.defName ?? string.Empty).Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 try { enjoyable = JoyUtility.EnjoyableOutsideNow(map); } catch { enjoyable = false; }
                 try { growth = PlantUtility.GrowthSeasonNow(map, ThingDefOf.Plant_Potato); } catch { growth = false; }
 
@@ -114,7 +114,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                     if (wind > 1.2f) adv.Add("Strong wind: wind turbines output high; watch for fire spread.");
                     if (!growth) adv.Add("Not in growth season: outdoor crops won't grow.");
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                 return new WeatherAnalysisSnapshot
                 {

@@ -39,7 +39,7 @@ namespace RimAI.Core.Source.Modules.Orchestration.Reaction
 				{
 					await ExecuteOnceAsync(convKey, participantIds, lastUserText, lastAssistantText, locale, playerTitle, token).ConfigureAwait(false);
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			});
 			EnsureWorker();
 			return Task.CompletedTask;
@@ -55,7 +55,7 @@ namespace RimAI.Core.Source.Modules.Orchestration.Reaction
 					if (_queue.TryDequeue(out var work))
 					{
 						try { await work(CancellationToken.None).ConfigureAwait(false); }
-						catch { }
+						catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					}
 					else
 					{
@@ -87,11 +87,11 @@ namespace RimAI.Core.Source.Modules.Orchestration.Reaction
 				}
 				if (pawnId > 0 && RimAI.Core.Source.Modules.Tooling.Execution.ReactionCooldown.IsCooling(pawnId))
 				{
-					try { Verse.Log.Message($"[RimAI.Core][Reaction] Cooldown pre-check active for pawn {pawnId}, skip dispatch."); } catch { }
+					try { Verse.Log.Message($"[RimAI.Core][Reaction] Cooldown pre-check active for pawn {pawnId}, skip dispatch."); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					return;
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
 			// 本地化提示
 			var useLocale = locale ?? _loc?.GetDefaultLocale() ?? "en";
@@ -105,7 +105,7 @@ namespace RimAI.Core.Source.Modules.Orchestration.Reaction
 					sys = sys + "\n\n[examples]\n" + examples.Trim();
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
 			var messages = new List<RimAI.Framework.Contracts.ChatMessage>
 			{
@@ -120,10 +120,10 @@ namespace RimAI.Core.Source.Modules.Orchestration.Reaction
 			if (tools.Count == 0) return;
 
 			// 清理会话缓存，避免受到主聊天上下文影响
-			try { await _llm.InvalidateConversationCacheAsync(convKey, ct).ConfigureAwait(false); } catch { }
+			try { await _llm.InvalidateConversationCacheAsync(convKey, ct).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			var req = new RimAI.Framework.Contracts.UnifiedChatRequest { ConversationId = convKey, Messages = messages, Stream = false };
 			// 诊断：发起请求日志（不含敏感头）
-			try { Verse.Log.Message($"[RimAI.Core][Reaction] Dispatch NonStream conv={convKey} msgs={messages.Count} tools={tools.Count}"); } catch { }
+			try { Verse.Log.Message($"[RimAI.Core][Reaction] Dispatch NonStream conv={convKey} msgs={messages.Count} tools={tools.Count}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			var resp = await _llm.GetResponseAsync(req, tools, jsonMode: false, cancellationToken: ct).ConfigureAwait(false);
 			if (!resp.IsSuccess || resp.Value?.Message == null || resp.Value.Message.ToolCalls == null || resp.Value.Message.ToolCalls.Count == 0) return;
 			// 诊断：LLM 返回内容（仅摘要）
@@ -136,7 +136,7 @@ namespace RimAI.Core.Source.Modules.Orchestration.Reaction
 				if (firstArgs.Length > 1024) firstArgs = firstArgs.Substring(0, 1024) + "...";
 				// Verse.Log.Message($"[RimAI.Core][Reaction] LLM tool_calls count={count}, first={{name={firstName}, args={firstArgs}}}");
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
 			var call = resp.Value.Message.ToolCalls[0];
 			string callId = call?.Id ?? Guid.NewGuid().ToString("N");
@@ -156,7 +156,7 @@ namespace RimAI.Core.Source.Modules.Orchestration.Reaction
 				args["last_user_text"] = lastUserText ?? string.Empty;
 				args["last_assistant_text"] = lastAssistantText ?? string.Empty;
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
 			// 不再写入任何与“心情反应”相关的历史记录，避免在会话历史中出现请求/结果 JSON
 			//（此前这里会写入一个轻量的 tool_call 记录用于调试）
@@ -164,11 +164,11 @@ namespace RimAI.Core.Source.Modules.Orchestration.Reaction
 			try
 			{
 				var result = await _tooling.ExecuteToolAsync(toolName, args, ct).ConfigureAwait(false);
-				// try { Verse.Log.Message($"[RimAI.Core][Reaction] Executed tool '{toolName}' result={SafeToString(result)}"); } catch { }
+				// try { Verse.Log.Message($"[RimAI.Core][Reaction] Executed tool '{toolName}' result={SafeToString(result)}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
 			catch (Exception ex)
 			{
-				try { Verse.Log.Warning($"[RimAI.Core][Reaction] Tool execution failed: {ex.Message}"); } catch { }
+				try { Verse.Log.Warning($"[RimAI.Core][Reaction] Tool execution failed: {ex.Message}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
 		}
 

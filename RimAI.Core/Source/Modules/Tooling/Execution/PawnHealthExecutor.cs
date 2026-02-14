@@ -17,7 +17,7 @@ namespace RimAI.Core.Source.Modules.Tooling.Execution
 				throw new ArgumentException("missing pawn_id");
 			var pawnId = Convert.ToInt32(v, CultureInfo.InvariantCulture);
 			IWorldDataService world = null;
-			try { world = (IWorldDataService)RimAI.Core.Source.Boot.RimAICoreMod.Container.Resolve(typeof(IWorldDataService)); } catch { }
+			try { world = (IWorldDataService)RimAI.Core.Source.Boot.RimAICoreMod.Container.Resolve(typeof(IWorldDataService)); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			if (world == null)
 			{
 				return Task.FromResult<object>(new { pawn_id = pawnId, ok = false });

@@ -63,7 +63,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 					}
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
 			float rowH = 46f;
 			var viewRect = new Rect(0f, 0f, listRect.width - 16f, Mathf.Max(listRect.height, items.Count * (rowH + 6f) + 6f));
@@ -76,7 +76,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 				Widgets.DrawHighlightIfMouseover(row);
 				// 头像
 				Texture tex = null;
-				try { tex = PortraitsCache.Get(p, new Vector2(rowH - 8f, rowH - 8f), Rot4.South); } catch { }
+				try { tex = PortraitsCache.Get(p, new Vector2(rowH - 8f, rowH - 8f), Rot4.South); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				var avatarRect = new Rect(row.x + 4f, row.y - 1f, rowH - 8f, rowH - 8f);
 				if (tex != null) GUI.DrawTexture(avatarRect, tex, ScaleMode.ScaleToFit);
 				// 文本：仅名称 + 下一行任职

@@ -57,14 +57,14 @@ namespace RimAI.Core.Source.Modules.Stage.Acts
                 conv = "agent:stage|group|" + (string.IsNullOrWhiteSpace(participantsKey) ? conv : participantsKey);
             }
             var participants = (req?.Ticket?.ParticipantIds ?? Array.Empty<string>()).ToList();
-            try { var lc = req?.Locale ?? _loc?.GetDefaultLocale() ?? "en"; Verse.Log.Message($"[RimAI.Core][P9] GroupChat begin conv={conv} participants={participants?.Count ?? 0} locale={lc}"); } catch { }
+            try { var lc = req?.Locale ?? _loc?.GetDefaultLocale() ?? "en"; Verse.Log.Message($"[RimAI.Core][P9] GroupChat begin conv={conv} participants={participants?.Count ?? 0} locale={lc}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             if (participants.Count < 2)
             {
                 var msgFew = "RimAI.Stage.GroupChat.TooFewParticipants".Translate().ToString();
                 return new ActResult { Completed = false, Reason = "TooFewParticipants", FinalText = msgFew };
             }
             // 确保历史服务已登记该会话的参与者映射，便于“关联对话”查询
-            try { if (_history != null) await _history.UpsertParticipantsAsync(conv, participants, ct).ConfigureAwait(false); } catch { }
+            try { if (_history != null) await _history.UpsertParticipantsAsync(conv, participants, ct).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             // 解析轮数：优先 ScenarioText；否则随机 1..3
             int rounds = 1;
             try
@@ -107,7 +107,7 @@ namespace RimAI.Core.Source.Modules.Stage.Acts
                     if (session == null) { var failMsg = "RimAI.Stage.GroupChat.TaskStartFailed".Translate().ToString(); return new ActResult { Completed = false, Reason = "WorldActionFailed", FinalText = failMsg }; }
                 }
             }
-            catch (Exception ex) { try { if (_history != null) await _history.AppendRecordAsync(conv, $"Stage:{Name}", "agent:stage", "log", $"startSessionError:{ex.GetType().Name}", false, ct).ConfigureAwait(false); } catch { } }
+            catch (Exception ex) { try { if (_history != null) await _history.AppendRecordAsync(conv, $"Stage:{Name}", "agent:stage", "log", $"startSessionError:{ex.GetType().Name}", false, ct).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } }
 
             int actualRounds = 0;
             var rnd = new Random(unchecked(Environment.TickCount ^ conv.GetHashCode()));
@@ -138,19 +138,19 @@ namespace RimAI.Core.Source.Modules.Stage.Acts
                         await _worldAction.EndGroupChatDutyAsync(session, completed ? "Completed" : (string.IsNullOrWhiteSpace(reason) ? "Aborted" : reason), ct).ConfigureAwait(false);
                     }
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 try
                 {
                     if (_history != null)
                     {
                         // 在日志记录之前，显式写入一条用户可见的结束语句
-                        try { var endMsg = "RimAI.Stage.GroupChat.RoundEnd".Translate().ToString(); await _history.AppendRecordAsync(conv, $"Stage:{Name}", "agent:stage", "chat", endMsg, false, ct).ConfigureAwait(false); } catch { }
+                        try { var endMsg = "RimAI.Stage.GroupChat.RoundEnd".Translate().ToString(); await _history.AppendRecordAsync(conv, $"Stage:{Name}", "agent:stage", "chat", endMsg, false, ct).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                         await _history.AppendRecordAsync(conv, $"Stage:{Name}", "agent:stage", "log", $"end:{(completed ? "Completed" : reason ?? "Aborted")}", false, ct).ConfigureAwait(false);
                     }
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 // 左上角提示（Act 结束）
-                try { var endUi = "RimAI.Stage.GroupChat.RoundEnd".Translate().ToString(); await _worldAction.ShowTopLeftMessageAsync(endUi, RimWorld.MessageTypeDefOf.TaskCompletion, ct).ConfigureAwait(false); } catch { }
+                try { var endUi = "RimAI.Stage.GroupChat.RoundEnd".Translate().ToString(); await _worldAction.ShowTopLeftMessageAsync(endUi, RimWorld.MessageTypeDefOf.TaskCompletion, ct).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             }
 
             // 预取：在播放本轮气泡时并发请求下一轮
@@ -214,7 +214,7 @@ namespace RimAI.Core.Source.Modules.Stage.Acts
                     Stream = false,
                     ForceJsonOutput = false
                 };
-                try { await _worldAction.ShowTopLeftMessageAsync("RimAI.Stage.GroupChat.RoundBegin".Translate(round).ToString(), RimWorld.MessageTypeDefOf.NeutralEvent, token).ConfigureAwait(false); } catch { }
+                try { await _worldAction.ShowTopLeftMessageAsync("RimAI.Stage.GroupChat.RoundBegin".Translate(round).ToString(), RimWorld.MessageTypeDefOf.NeutralEvent, token).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 var respLocal = await _llm.GetResponseAsync(chatReqLocal, token).ConfigureAwait(false);
                 // 控制台输出原始 LLM 返回内容（截断以防日志过长）
                 try
@@ -223,7 +223,7 @@ namespace RimAI.Core.Source.Modules.Stage.Acts
                     if (raw.Length > 4000) raw = raw.Substring(0, 4000) + "...";
                     Verse.Log.Message($"[RimAI.Core][P9] GroupChat LLM raw (round={round})\nconv={conv}\n{raw}");
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 if (!respLocal.IsSuccess) return null;
                 return respLocal.Value?.Message?.Content ?? string.Empty;
             };
@@ -241,7 +241,7 @@ namespace RimAI.Core.Source.Modules.Stage.Acts
                         int pid;
                         if (!string.IsNullOrWhiteSpace(pidStr) && pidStr.StartsWith("pawn:") && int.TryParse(pidStr.Substring(5), out pid))
                         {
-                            try { await _worldAction.ShowSpeechTextAsync(pid, text, hard).ConfigureAwait(false); } catch { }
+                            try { await _worldAction.ShowSpeechTextAsync(pid, text, hard).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                         }
                         try { await Task.Delay(1500, hard).ConfigureAwait(false); } catch { break; }
                     }
@@ -298,7 +298,7 @@ namespace RimAI.Core.Source.Modules.Stage.Acts
                             outQueue.Enqueue((msg.speaker, msg.content, false));
                             // 同步构建简单文本记录（用于结果文本）
                             transcript.AppendLine($"【{msg.speaker}】{msg.content}");
-                            try { if (_history != null) await _history.AppendRecordAsync(conv, $"Stage:{Name}", msg.speaker, "chat", msg.content, advanceTurn: false, ct: hard).ConfigureAwait(false); } catch { }
+                            try { if (_history != null) await _history.AppendRecordAsync(conv, $"Stage:{Name}", msg.speaker, "chat", msg.content, advanceTurn: false, ct: hard).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                         }
                         transcript.AppendLine();
                         // 为下一轮构建 assist 块：使用上一轮的原始 JSON 数组，强化模型对 JSON 输出的遵循
@@ -312,21 +312,21 @@ namespace RimAI.Core.Source.Modules.Stage.Acts
                             var jsonBlock = JsonConvert.SerializeObject(jsonItems);
                             if (!string.IsNullOrWhiteSpace(jsonBlock)) priorRoundAssistantBlocks.Add(jsonBlock);
                         }
-                        catch { }
+                        catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                     }
                     else { aborted = true; break; }
                 }
-                catch (Exception ex) { aborted = true; try { if (_history != null) await _history.AppendRecordAsync(conv, $"Stage:{Name}", "agent:stage", "log", $"parseError:{ex.GetType().Name}", false, hard).ConfigureAwait(false); } catch { } break; }
+                catch (Exception ex) { aborted = true; try { if (_history != null) await _history.AppendRecordAsync(conv, $"Stage:{Name}", "agent:stage", "log", $"parseError:{ex.GetType().Name}", false, hard).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } break; }
 
                 // 轮次间隔固定 1.5 秒
                 if (deadlineHit) { break; }
-                try { await Task.Delay(1500, hard).ConfigureAwait(false); } catch { }
+                try { await Task.Delay(1500, hard).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 if (DateTime.UtcNow > enqueueDeadlineUtc) { deadlineHit = true; break; }
             }
 
             // 入队结束标记（若门限命中则立即标记结束）
             outQueue.Enqueue((null, null, true));
-            try { await consumeTask.ConfigureAwait(false); } catch { }
+            try { await consumeTask.ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
             // 统一结束：根据是否完整完成来决定 Completed/Aborted
             var completedAll = (!aborted && actualRounds >= rounds);

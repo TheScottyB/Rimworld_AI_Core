@@ -62,7 +62,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                                 missing.Add(new ConstructionMissingItem { Res = need.thingDef.label ?? need.thingDef.defName, Qty = gap });
                             }
                         }
-                        catch { }
+                        catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                     }
                     items.Add(new ConstructionBuildItem { DefName = defName, Thing = label, Count = 1, Missing = missing });
                 }
@@ -77,7 +77,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         var cost = bp?.TotalMaterialCost();
                         AddOne(defName, label, cost);
                     }
-                    catch { }
+                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 }
                 foreach (var fr in frames)
                 {
@@ -89,7 +89,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         var cost = fr?.TotalMaterialCost();
                         AddOne(defName, label, cost);
                     }
-                    catch { }
+                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 }
 
                 // 4) 聚合同类（按 DefName/Label 归并），合并缺口按资源种类相加

@@ -84,7 +84,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                             }
                         }
                     }
-                    catch { }
+                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 }
 
                 // TopN 排序：优先低成本、低 techprint、已满足前置
@@ -240,9 +240,9 @@ namespace RimAI.Core.Source.Modules.World.Parts
                 var s = p.LabelCap.ToString();
                 if (!string.IsNullOrWhiteSpace(s)) return s;
             }
-            catch { }
-            try { if (!string.IsNullOrWhiteSpace(p.label)) return p.label; } catch { }
-            try { if (!string.IsNullOrWhiteSpace(p.defName)) return p.defName; } catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+            try { if (!string.IsNullOrWhiteSpace(p.label)) return p.label; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+            try { if (!string.IsNullOrWhiteSpace(p.defName)) return p.defName; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             return string.Empty;
         }
 
@@ -263,7 +263,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                     if (pawn.skills?.GetSkill(SkillDefOf.Intellectual)?.TotallyDisabled == true) continue;
                     n++;
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             }
             return n;
         }
@@ -279,7 +279,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
             const float baseFactor = 0.00825f;
             const float activeHours = 6f;
             float difficulty = 1f;
-            try { difficulty = Find.Storyteller?.difficulty?.researchSpeedFactor ?? 1f; } catch { }
+            try { difficulty = Find.Storyteller?.difficulty?.researchSpeedFactor ?? 1f; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
             float sum = 0f;
             var pawns = PawnsFinder.AllMaps_FreeColonistsSpawned;
@@ -294,7 +294,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                     float perDay = rs * activeHours * ticksPerHour * baseFactor * difficulty / ticksPerDay;
                     sum += perDay;
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             }
             // 科技等级差异会在实际研究中按项目 CostFactor 生效；这里作为粗略速度不再二次扣减
             return sum;

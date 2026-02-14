@@ -35,7 +35,7 @@ namespace RimAI.Core.Source.Modules.Stage.Triggers
 		public Task OnEnableAsync(CancellationToken ct) { _enabled = true; return Task.CompletedTask; }
 		public Task OnDisableAsync(CancellationToken ct) { _enabled = false; return Task.CompletedTask; }
 
-		public void ArmOnce() { _armed = true; try { _log?.Info("GlobalTrigger armed once"); } catch { } }
+		public void ArmOnce() { _armed = true; try { _log?.Info("GlobalTrigger armed once"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } }
 
 		public async Task RunOnceAsync(Func<StageIntent, Task<StageDecision>> submit, CancellationToken ct)
 		{
@@ -44,10 +44,10 @@ namespace RimAI.Core.Source.Modules.Stage.Triggers
 			if (!force)
 			{
 				// 1% 概率
-				if (_rnd.Next(0, 100) != 0) { try { _log?.Info("GlobalTrigger skipped by probability"); } catch { } return; }
+				if (_rnd.Next(0, 100) != 0) { try { _log?.Info("GlobalTrigger skipped by probability"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } return; }
 			}
 
-			try { _log?.Info($"TriggerHit mode={(force ? "manual" : "random")}"); } catch { }
+			try { _log?.Info($"TriggerHit mode={(force ? "manual" : "random")}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
 			List<string> actNames;
 			try { actNames = _stage.ListActs()?.ToList() ?? new List<string>(); }
@@ -65,15 +65,15 @@ namespace RimAI.Core.Source.Modules.Stage.Triggers
 				{
 					var intent = await auto.TryBuildAutoIntentAsync(ct).ConfigureAwait(false);
 					if (intent == null) continue;
-					try { _log?.Info($"ActPicked name={intent.ActName} participants={(intent.ParticipantIds?.Count ?? 0)} origin={intent.Origin}"); } catch { }
+					try { _log?.Info($"ActPicked name={intent.ActName} participants={(intent.ParticipantIds?.Count ?? 0)} origin={intent.Origin}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					await submit(intent).ConfigureAwait(false);
-					try { _log?.Info("GlobalTrigger submission done"); } catch { }
+					try { _log?.Info("GlobalTrigger submission done"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					return;
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
 
-			try { _log?.Info("ActPick none-available"); } catch { }
+			try { _log?.Info("ActPick none-available"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 	}
 }

@@ -85,7 +85,7 @@ namespace RimAI.Core.Source.Modules.Prompting.Composers.Stage
 							fixedText = CleanInline(persona.FixedPrompts.Text);
 						}
 					}
-					catch { }
+					catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					try
 					{
 						var social = await world.GetPawnSocialSnapshotAsync(r.id, 2, 0, ct).ConfigureAwait(false);
@@ -94,7 +94,7 @@ namespace RimAI.Core.Source.Modules.Prompting.Composers.Stage
 							socialText = CleanInline(string.Join("/", social.Relations.Take(2).Select(rel => $"{rel.RelationKind}-{rel.OtherName}({rel.Opinion:+#;-#;0})")));
 						}
 					}
-					catch { }
+					catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
 					var args = new Dictionary<string, string>
 					{
@@ -133,7 +133,7 @@ namespace RimAI.Core.Source.Modules.Prompting.Composers.Stage
 				}
 				lines.Add(line2);
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			return new ComposerOutput { SystemLines = lines, ContextBlocks = Array.Empty<ContextBlock>() };
 		}
 

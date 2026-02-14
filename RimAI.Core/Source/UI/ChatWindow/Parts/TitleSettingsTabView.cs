@@ -33,11 +33,11 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 			var btnY = box.yMax + 8f;
 			if (Widgets.ButtonText(new Rect(inRect.x, btnY, 90f, 26f), "RimAI.Common.Save".Translate()))
 			{
-				try { var cfgInt = cfg as RimAI.Core.Source.Infrastructure.Configuration.ConfigurationService; if (string.IsNullOrWhiteSpace(_input)) cfgInt?.SetPlayerTitle(null); else cfgInt?.SetPlayerTitle(_input.Trim()); onSaved?.Invoke(_input); } catch { }
+				try { var cfgInt = cfg as RimAI.Core.Source.Infrastructure.Configuration.ConfigurationService; if (string.IsNullOrWhiteSpace(_input)) cfgInt?.SetPlayerTitle(null); else cfgInt?.SetPlayerTitle(_input.Trim()); onSaved?.Invoke(_input); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
 			if (Widgets.ButtonText(new Rect(inRect.x + 100f, btnY, 90f, 26f), "RimAI.Common.Reset".Translate()))
 			{
-				try { var cfgInt = cfg as RimAI.Core.Source.Infrastructure.Configuration.ConfigurationService; cfgInt?.SetPlayerTitle(null); var locale = cfgInt?.GetInternal()?.General?.Locale ?? "en"; var fallback = loc?.Get(locale, "ui.chat.player_title.value", loc?.Get("en", "ui.chat.player_title.value", "governor") ?? "governor") ?? "governor"; _input = fallback; onSaved?.Invoke(_input); } catch { }
+				try { var cfgInt = cfg as RimAI.Core.Source.Infrastructure.Configuration.ConfigurationService; cfgInt?.SetPlayerTitle(null); var locale = cfgInt?.GetInternal()?.General?.Locale ?? "en"; var fallback = loc?.Get(locale, "ui.chat.player_title.value", loc?.Get("en", "ui.chat.player_title.value", "governor") ?? "governor") ?? "governor"; _input = fallback; onSaved?.Invoke(_input); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
 		}
 	}

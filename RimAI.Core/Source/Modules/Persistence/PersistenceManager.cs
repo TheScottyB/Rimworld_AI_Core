@@ -27,7 +27,7 @@ namespace RimAI.Core.Source.Modules.Persistence
 						// no-op: 占位，便于后续集成导入缓冲到存档流程
 					}
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				svc.SaveAll(snap);
 			}
 			else if (Scribe.mode == LoadSaveMode.LoadingVars)
@@ -60,7 +60,7 @@ namespace RimAI.Core.Source.Modules.Persistence
 					if (ss != null) snap.Servers = ss;
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			// 从 P8 的内存服务同步导出 History 与 Recap 到快照
 			try
 			{
@@ -130,7 +130,7 @@ namespace RimAI.Core.Source.Modules.Persistence
 					}
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			return snap;
 		}
 
@@ -174,7 +174,7 @@ namespace RimAI.Core.Source.Modules.Persistence
 					}
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
 			// 将 History 与 Recap 快照回灌到 P8 内存服务，并重算水位
 			try
@@ -191,12 +191,12 @@ namespace RimAI.Core.Source.Modules.Persistence
 						var convId = kv.Key;
 						var parts = kv.Value?.ParticipantIds ?? new System.Collections.Generic.List<string>();
 						var convKey = string.Join("|", parts.OrderBy(x => x));
-						try { history.UpsertParticipantsAsync(convKey, parts).GetAwaiter().GetResult(); } catch { }
+						try { history.UpsertParticipantsAsync(convKey, parts).GetAwaiter().GetResult(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 						var entries = kv.Value?.Entries ?? new System.Collections.Generic.List<ConversationEntry>();
 						foreach (var e in entries)
 						{
 							// e.Text 为 JSON 字符串（P14）；直接导回原始 JSON 内容
-							try { (history as History.HistoryService)?.ImportRawSnapshotEntryAsync(convKey, e.Text, e.TurnOrdinal, new System.DateTime(e.CreatedAtTicksUtc, System.DateTimeKind.Utc)).GetAwaiter().GetResult(); } catch { }
+							try { (history as History.HistoryService)?.ImportRawSnapshotEntryAsync(convKey, e.Text, e.TurnOrdinal, new System.DateTime(e.CreatedAtTicksUtc, System.DateTimeKind.Utc)).GetAwaiter().GetResult(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 						}
 					}
 
@@ -233,9 +233,9 @@ namespace RimAI.Core.Source.Modules.Persistence
 						server.ImportSnapshot(snapshot.Servers);
 					}
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 	}
 }

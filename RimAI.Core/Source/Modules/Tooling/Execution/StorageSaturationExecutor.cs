@@ -13,7 +13,7 @@ namespace RimAI.Core.Source.Modules.Tooling.Execution
         public Task<object> ExecuteAsync(Dictionary<string, object> args, CancellationToken ct = default)
         {
             IWorldDataService world = null;
-            try { world = (IWorldDataService)RimAI.Core.Source.Boot.RimAICoreMod.Container.Resolve(typeof(IWorldDataService)); } catch { }
+            try { world = (IWorldDataService)RimAI.Core.Source.Boot.RimAICoreMod.Container.Resolve(typeof(IWorldDataService)); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             if (world == null) return Task.FromResult<object>(new { ok = false });
             return world.GetStorageSaturationAsync(ct).ContinueWith<Task<object>>(t =>
             {

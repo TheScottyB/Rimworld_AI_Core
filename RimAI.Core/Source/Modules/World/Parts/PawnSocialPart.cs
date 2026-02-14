@@ -47,7 +47,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         });
                     }
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 var ordered = relations.OrderByDescending(x => x.Opinion).Take(UnityEngine.Mathf.Max(0, topRelations)).ToList();
                 var eventsList = new System.Collections.Generic.List<SocialEventItem>();
                 try
@@ -55,7 +55,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                     var events = RimAI.Core.Source.Versioned._1_6.World.WorldApiV16.GetRecentSocialEvents(pawn, recentSocialEvents) ?? new System.Collections.Generic.List<SocialEventItem>();
                     eventsList.AddRange(events);
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 return new PawnSocialSnapshot { Relations = ordered, RecentEvents = eventsList };
             }, name: "GetPawnSocialSnapshot", ct: cts.Token);
         }

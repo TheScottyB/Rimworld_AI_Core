@@ -44,10 +44,10 @@ namespace RimAI.Core.Source.Modules.World.Parts
 						manhunters++;
 					}
 				}
-				float points = 0f; try { points = StorytellerUtility.DefaultThreatPointsNow(map); } catch { }
-				string danger = string.Empty; try { danger = map.dangerWatcher?.DangerRating.ToString(); } catch { }
-				float fire = 0f; try { fire = map.fireWatcher?.FireDanger ?? 0f; } catch { }
-				float lastBigDays = 0f; try { lastBigDays = (Find.TickManager.TicksGame - map.storyState.LastThreatBigTick) / 60000f; } catch { }
+				float points = 0f; try { points = StorytellerUtility.DefaultThreatPointsNow(map); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+				string danger = string.Empty; try { danger = map.dangerWatcher?.DangerRating.ToString(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+				float fire = 0f; try { fire = map.fireWatcher?.FireDanger ?? 0f; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+				float lastBigDays = 0f; try { lastBigDays = (Find.TickManager.TicksGame - map.storyState.LastThreatBigTick) / 60000f; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				return new ThreatSnapshot { HostilePawns = hostile, Manhunters = manhunters, Mechanoids = mechs, ThreatPoints = points, DangerRating = danger, FireDanger = fire, LastBigThreatDaysAgo = lastBigDays };
 			}, name: "ThreatScanPart.Get", ct: cts.Token);
 		}

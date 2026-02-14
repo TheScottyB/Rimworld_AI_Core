@@ -28,9 +28,9 @@ namespace RimAI.Core.Source.Modules.Server
 					}
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			// 全局关闭则直接返回
-			try { var cfg = RimAI.Core.Source.Boot.RimAICoreMod.Container.Resolve<RimAI.Core.Source.Infrastructure.Configuration.ConfigurationService>(); if (cfg != null && !cfg.GetServerConfig().GlobalInspectionEnabled) return; } catch { }
+			try { var cfg = RimAI.Core.Source.Boot.RimAICoreMod.Container.Resolve<RimAI.Core.Source.Infrastructure.Configuration.ConfigurationService>(); if (cfg != null && !cfg.GetServerConfig().GlobalInspectionEnabled) return; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			if (!(s.InspectionEnabled)) return;
 			// 巡检时排除空槽位与无工具名的槽位
 			var enabled = (s.InspectionSlots ?? new List<InspectionSlot>()).Where(x => x != null && x.Enabled && !string.IsNullOrWhiteSpace(x.ToolName)).OrderBy(x => x.Index).ToList();
@@ -46,18 +46,18 @@ namespace RimAI.Core.Source.Modules.Server
 					try { var all = await _history.GetAllEntriesRawAsync(convKey, ct).ConfigureAwait(false); threadEmpty = (all == null || all.Count == 0); } catch { threadEmpty = false; }
 					if (threadEmpty || !s.LastNoToolsNoticeAtAbsTicks.HasValue || now - s.LastNoToolsNoticeAtAbsTicks.Value >= gap)
 					{
-						try { await _history.UpsertParticipantsAsync(convKey, new List<string> { "agent:server_inspection", TryMakeInspectionParticipant(entityId) }, ct).ConfigureAwait(false); } catch { }
+						try { await _history.UpsertParticipantsAsync(convKey, new List<string> { "agent:server_inspection", TryMakeInspectionParticipant(entityId) }, ct).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 						var msg = _loc?.Get(_loc?.GetDefaultLocale() ?? "en", "RimAI.Server.Inspection.NoTools", "No tools configured for inspection.") ?? "No tools configured for inspection.";
 						string gameTime = null; try { gameTime = await _world.GetCurrentGameTimeStringAsync(ct).ConfigureAwait(false); } catch { gameTime = null; }
 						var sn = string.IsNullOrWhiteSpace(s.SerialHex12) ? "SN-UNKNOWN" : ($"SN-{s.SerialHex12}");
 						var prefix = string.IsNullOrWhiteSpace(gameTime) ? ($"[{sn}] ") : ($"[{sn}] {gameTime} ");
 						await _history.AppendRecordAsync(convKey, "P13.Server", entityId, "log", prefix + msg, advanceTurn: false, ct: ct).ConfigureAwait(false);
 						// 写入后修剪会话历史至上限
-						try { await PruneInspectionHistoryIfNeededAsync(convKey, ct).ConfigureAwait(false); } catch { }
+						try { await PruneInspectionHistoryIfNeededAsync(convKey, ct).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 						s.LastNoToolsNoticeAtAbsTicks = now;
 					}
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				return;
 			}
 			// pick one slot by rotation pointer
@@ -71,7 +71,7 @@ namespace RimAI.Core.Source.Modules.Server
 			{
 				var args = new Dictionary<string, object>();
 				try { args["server_level"] = Math.Max(1, Math.Min(3, s.Level)); } catch { args["server_level"] = 1; }
-				try { args["inspection"] = true; } catch { }
+				try { args["inspection"] = true; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				toolResult = await _tooling.ExecuteToolAsync(toolName, args, ct).ConfigureAwait(false);
 			}
 			catch (OperationCanceledException) { throw; }
@@ -114,7 +114,7 @@ namespace RimAI.Core.Source.Modules.Server
 						Text = TrimToBudget(jsonText, 1800)
 					});
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				var promptReq = new RimAI.Core.Source.Modules.Prompting.Models.PromptBuildRequest
 				{
 					Scope = RimAI.Core.Source.Modules.Prompting.Models.PromptScope.ServerInspection,
@@ -148,7 +148,7 @@ namespace RimAI.Core.Source.Modules.Server
 						user = string.IsNullOrWhiteSpace(user) ? sb.ToString() : (user + "\n\n" + sb.ToString());
 					}
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				if (string.IsNullOrWhiteSpace(user)) user = $"tool={toolName}"; // fallback
 				var messages = new List<RimAI.Framework.Contracts.ChatMessage>
 				{
@@ -183,7 +183,7 @@ namespace RimAI.Core.Source.Modules.Server
 			{
 				var convKey = BuildServerInspectionConvKey(entityId);
 				// 写入参与者元数据，便于 UI 侧通过 participants 推导出 server id
-				try { await _history.UpsertParticipantsAsync(convKey, new List<string> { "agent:server_inspection", TryMakeInspectionParticipant(entityId) }, ct).ConfigureAwait(false); } catch { }
+				try { await _history.UpsertParticipantsAsync(convKey, new List<string> { "agent:server_inspection", TryMakeInspectionParticipant(entityId) }, ct).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				var content = string.IsNullOrWhiteSpace(summary) ? fallbackJson : summary;
 				var core = TrimToBudget(content, 1600);
 				int now = GetTicks();
@@ -196,10 +196,10 @@ namespace RimAI.Core.Source.Modules.Server
 					var prefix = string.IsNullOrWhiteSpace(gameTime) ? ($"[{sn}] ") : ($"[{sn}] {gameTime} ");
 					await _history.AppendRecordAsync(convKey, "P13.Server", entityId, "log", prefix + core, advanceTurn: false, ct: ct).ConfigureAwait(false);
 					// 写入后修剪会话历史至上限
-					try { await PruneInspectionHistoryIfNeededAsync(convKey, ct).ConfigureAwait(false); } catch { }
+					try { await PruneInspectionHistoryIfNeededAsync(convKey, ct).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
 			// Update snapshot & next due（最后再更新）
 			// 仅将未加前缀的核心文本写入快照用于去重

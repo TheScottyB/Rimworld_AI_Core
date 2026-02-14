@@ -103,7 +103,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow.Parts
             // 完成后一并合并残余分片（避免 UI 帧漏合并）
             if (controller.State.Indicators.FinishOn && !historyWritten)
             {
-                try { AppendAllChunks(controller.State); historyWritten = true; } catch { }
+                try { AppendAllChunks(controller.State); historyWritten = true; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 // 合并残余分片后同样吸底
                 var forcedH2 = ComputeTranscriptViewHeight(transcriptRect, controller.State);
                 scrollTranscript.y = forcedH2;

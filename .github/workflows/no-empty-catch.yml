@@ -1,0 +1,15 @@
+name: No empty catch blocks
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  guard-empty-catch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check for empty catch blocks
+        run: scripts/ci/check-empty-catch.sh

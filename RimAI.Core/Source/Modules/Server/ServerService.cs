@@ -88,7 +88,7 @@ namespace RimAI.Core.Source.Modules.Server
 					return existing;
 				});
 			// 确保至少初始化一个槽位（按等级容量）
-			try { EnsureInspectionSlots(result, GetInspectionCapacity(result.Level)); } catch { }
+			try { EnsureInspectionSlots(result, GetInspectionCapacity(result.Level)); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			return result;
 		}
 

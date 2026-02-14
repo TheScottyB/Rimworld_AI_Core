@@ -55,7 +55,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 							var player = controller?.State?.ParticipantIds?.FirstOrDefault(x => x != null && x.StartsWith("player:"));
 							if (!string.IsNullOrEmpty(player)) { pids.Add(player); }
 						}
-						catch { }
+						catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 						pids.Sort(StringComparer.Ordinal);
 						var convKey = string.Join("|", pids);
 						var intent = new StageIntent { ActName = "GroupChat", ParticipantIds = participants, Origin = "ChatUI-Test", ScenarioText = string.Empty, Locale = null, Seed = DateTime.UtcNow.Ticks.ToString() };
@@ -81,7 +81,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 					var keys = history?.GetAllConvKeys() ?? new List<string>();
 					var preview = string.Join("\n", keys);
 					_status = $"History Keys ({keys.Count}):\n{preview}";
-					try { GUIUtility.systemCopyBuffer = _status; } catch { }
+					try { GUIUtility.systemCopyBuffer = _status; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				}
 				catch (Exception ex)
 				{

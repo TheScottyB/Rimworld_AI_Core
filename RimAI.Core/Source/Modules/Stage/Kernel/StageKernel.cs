@@ -196,7 +196,7 @@ namespace RimAI.Core.Source.Modules.Stage.Kernel
 					if (kv.Value <= now) { DateTime _tmp; _cooldowns.TryRemove(kv.Key, out _tmp); }
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		public IReadOnlyList<StageTicket> GetRunningTickets()

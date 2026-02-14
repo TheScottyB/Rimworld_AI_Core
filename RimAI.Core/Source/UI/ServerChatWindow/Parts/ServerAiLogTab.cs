@@ -142,7 +142,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow.Parts
                 state.Lines.Clear();
                 state.Lines.AddRange(lines);
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
         }
 
         private static (Color color, string display) ResolveColorAndDisplay(State state, string speaker)
@@ -157,7 +157,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow.Parts
                     if (int.TryParse(s, out var n)) id = n;
                 }
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             if (!id.HasValue) return (new Color(0.85f, 0.85f, 0.85f), speaker);
             if (!state.ColorMap.TryGetValue(id.Value, out var color))
             {
@@ -182,12 +182,12 @@ namespace RimAI.Core.Source.UI.ServerChatWindow.Parts
                 if (stage == null) return;
                 UiLog("[RimAI.Core][UI][AiLog] Trigger click: begin");
                 // 优先：走“服务器群聊”专用手动触发器
-                try { var armed = stage.ArmTrigger("ManualInterServerTrigger"); UiLog($"[RimAI.Core][UI][AiLog] Arm ManualInterServerTrigger => {armed}"); } catch { }
-                try { await stage.RunActiveTriggersOnceAsync(System.Threading.CancellationToken.None).ConfigureAwait(false); UiLog("[RimAI.Core][UI][AiLog] RunActiveTriggersOnceAsync after Manual trigger"); } catch { }
+                try { var armed = stage.ArmTrigger("ManualInterServerTrigger"); UiLog($"[RimAI.Core][UI][AiLog] Arm ManualInterServerTrigger => {armed}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                try { await stage.RunActiveTriggersOnceAsync(System.Threading.CancellationToken.None).ConfigureAwait(false); UiLog("[RimAI.Core][UI][AiLog] RunActiveTriggersOnceAsync after Manual trigger"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                 // 次优：全局随机触发器（被武装后会必定尝试一次）
-                try { var armed2 = stage.ArmTrigger("GlobalTimedRandomActTrigger"); UiLog($"[RimAI.Core][UI][AiLog] Arm GlobalTimedRandomActTrigger => {armed2}"); } catch { }
-                try { await stage.RunActiveTriggersOnceAsync(System.Threading.CancellationToken.None).ConfigureAwait(false); UiLog("[RimAI.Core][UI][AiLog] RunActiveTriggersOnceAsync after Global trigger"); } catch { }
+                try { var armed2 = stage.ArmTrigger("GlobalTimedRandomActTrigger"); UiLog($"[RimAI.Core][UI][AiLog] Arm GlobalTimedRandomActTrigger => {armed2}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                try { await stage.RunActiveTriggersOnceAsync(System.Threading.CancellationToken.None).ConfigureAwait(false); UiLog("[RimAI.Core][UI][AiLog] RunActiveTriggersOnceAsync after Global trigger"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                 // 兜底：若未注册该 Trigger 或无可用 Act，则直接尝试提交 InterServerGroupChat 的自动意图
                 if (stage is RimAI.Core.Source.Modules.Stage.StageService impl)
@@ -210,7 +210,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow.Parts
                 state.NextRefreshRealtime = 0; // 强制更快刷新以显示新日志
                 UiLog("[RimAI.Core][UI][AiLog] Trigger click: end");
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
         }
     }
 }

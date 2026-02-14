@@ -74,7 +74,7 @@ namespace RimAI.Core.Source.Boot
                         // Dev-only dump gizmo removed to reduce clutter; use logs if needed.
                     }
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                 __result = list;
             }

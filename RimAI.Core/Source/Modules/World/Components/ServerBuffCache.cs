@@ -102,13 +102,13 @@ namespace RimAI.Core.Source.Modules.World.Components
                             rndTotals[name] = cur + pct;
                         }
                     }
-                    catch { }
+                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 }
 
                 entry.GlobalPercent = Math.Max(0, global);
                 entry.RandomTotalsByStat = rndTotals;
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
         }
     }
 }

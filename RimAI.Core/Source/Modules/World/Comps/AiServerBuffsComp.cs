@@ -55,11 +55,11 @@ namespace RimAI.Core.Source.Modules.World.Comps
 					// 后台触发清理：停止巡检并清空巡检/1v1 历史会话
 					_ = System.Threading.Tasks.Task.Run(async () =>
 					{
-						try { await server.RemoveAsync($"thing:{id}", clearInspectionHistory: true).ConfigureAwait(false); } catch { }
+						try { await server.RemoveAsync($"thing:{id}", clearInspectionHistory: true).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					});
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		public override string CompInspectStringExtra()
@@ -97,7 +97,7 @@ namespace RimAI.Core.Source.Modules.World.Comps
 							sb.AppendLine(string.Format("{0} +{1}% (随机)", label.CapitalizeFirst(), pct));
 						}
 					}
-					catch { }
+					catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				}
 				var txt = sb.ToString().TrimEnd();
 				return string.IsNullOrWhiteSpace(txt) ? null : txt;

@@ -65,7 +65,7 @@ namespace RimAI.Core.Source.Modules.Stage
 				{
 					if (t.trigger is IManualStageTrigger m) { m.ArmOnce(); return true; }
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
 			return false;
 		}
@@ -128,7 +128,7 @@ namespace RimAI.Core.Source.Modules.Stage
 				{
 					await RouteAndExecuteAsync(intent, ticket, convKey, cooldownSec, ct);
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			});
 
 			_log.Info($"Accepted intent act={intent.ActName} convKey={convKey} ticket={ticket.Id}");
@@ -150,7 +150,7 @@ namespace RimAI.Core.Source.Modules.Stage
 					while (!cts.IsCancellationRequested)
 					{
 						try { await Task.Delay(Math.Max(100, leaseTtlMs / 2), cts.Token); } catch { break; }
-						try { _kernel.ExtendLease(req.Ticket, leaseTtl); } catch { }
+						try { _kernel.ExtendLease(req.Ticket, leaseTtl); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					}
 				});
 
@@ -172,8 +172,8 @@ namespace RimAI.Core.Source.Modules.Stage
 				}
 				finally
 				{
-					try { cts.Cancel(); } catch { }
-					try { await renewTask; } catch { }
+					try { cts.Cancel(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+					try { await renewTask; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				}
 
 				result = result ?? new ActResult { Completed = false, Reason = "Exception", FinalText = "（本轮对话失败或超时，已跳过）" };
@@ -218,7 +218,7 @@ namespace RimAI.Core.Source.Modules.Stage
 				{
 					await trigger.RunOnceAsync(intent => SubmitIntentAsync(intent, ct), ct);
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
 		}
 

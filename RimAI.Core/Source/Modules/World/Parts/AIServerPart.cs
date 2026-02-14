@@ -54,7 +54,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         }
                     }
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 return (System.Collections.Generic.IReadOnlyList<int>)ids;
             }, name: "GetPoweredAiServerThingIds", ct: cts.Token);
         }
@@ -83,7 +83,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         }
                     }
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 return 1;
             }, name: "GetAiServerLevel", ct: cts.Token);
         }
@@ -108,7 +108,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         }
                     }
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 return false;
             }, name: "AiServerExists", ct: cts.Token);
         }
@@ -176,7 +176,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         snap.TemperatureC = Mathf.RoundToInt(temp);
                     }
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 return snap;
             }, name: "GetAiServerSnapshot", ct: cts.Token);
         }

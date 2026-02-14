@@ -139,7 +139,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow.Parts
                         results.Add((key, title, text ?? string.Empty));
                 }
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             return results;
         }
     }

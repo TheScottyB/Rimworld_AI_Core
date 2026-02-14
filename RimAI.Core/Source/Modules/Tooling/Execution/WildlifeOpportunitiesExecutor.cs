@@ -14,7 +14,7 @@ namespace RimAI.Core.Source.Modules.Tooling.Execution
         {
             // 无参数 v1
             IWorldDataService wds = null;
-            try { wds = (IWorldDataService)RimAI.Core.Source.Boot.RimAICoreMod.Container.Resolve(typeof(IWorldDataService)); } catch { }
+            try { wds = (IWorldDataService)RimAI.Core.Source.Boot.RimAICoreMod.Container.Resolve(typeof(IWorldDataService)); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             if (wds == null) return new { ok = false };
             var snap = await wds.GetWildlifeOpportunitiesAsync(ct).ConfigureAwait(false);
             var items = (snap?.Species ?? new List<WildlifeSpeciesGroup>()).Select(s => new Dictionary<string, object>

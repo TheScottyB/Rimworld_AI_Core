@@ -47,7 +47,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         result.Add(f.loadID);
                     }
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 return (IReadOnlyList<int>)result;
             }, name: "FactionPart.GetEligibleFactionLoadIds", ct: cts.Token);
         }

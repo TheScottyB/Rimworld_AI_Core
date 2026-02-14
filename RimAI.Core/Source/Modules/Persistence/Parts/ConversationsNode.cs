@@ -38,7 +38,7 @@ namespace RimAI.Core.Source.Modules.Persistence.Parts
                             var initialLen = Newtonsoft.Json.JsonConvert.SerializeObject(rec).Length;
                             if (initialLen <= limit) continue;
                         }
-                        catch { }
+                        catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                         // 二分+保留最近 mid 条发言
                         int total = entries.Count;
@@ -60,11 +60,11 @@ namespace RimAI.Core.Source.Modules.Persistence.Parts
                         {
                             rec.Entries = low > 0 ? entries.Skip(total - low).ToList() : new List<ConversationEntry>();
                             var removed = total - low;
-                            try { Verse.Log.Message($"[RimAI.Core][P6.Persistence] truncate=ConversationsV2 convId={key}, removed={removed}, kept={low}"); } catch { }
+                            try { Verse.Log.Message($"[RimAI.Core][P6.Persistence] truncate=ConversationsV2 convId={key}, removed={removed}, kept={low}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                         }
                     }
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                 Scribe_Poco.LookJsonDict(ref convs, "items");
                 Scribe.ExitNode();

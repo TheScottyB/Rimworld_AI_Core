@@ -36,7 +36,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
             {
                 var map = Find.CurrentMap;
                 int s = (int)(Find.TickManager?.TicksGame ?? 0) ^ 0x5F3759DF;
-                try { if (map != null) unchecked { s ^= (map.uniqueID * 397) ^ map.Tile; } } catch { }
+                try { if (map != null) unchecked { s ^= (map.uniqueID * 397) ^ map.Tile; } } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 return s;
             }, name: "Meta.CipherSeed", ct: cts.Token);
         }
@@ -82,7 +82,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                             if (e is PlayLogEntry_Interaction inter)
                             {
                                 Pawn pov = null;
-                                try { pov = inter.GetConcerns()?.OfType<Pawn>()?.FirstOrDefault(); } catch { }
+                                try { pov = inter.GetConcerns()?.OfType<Pawn>()?.FirstOrDefault(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                                 try { text = inter.ToGameStringFromPOV(pov, false); }
                                 catch { text = inter.ToString(); }
                             }
@@ -105,7 +105,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         list.Add(new GameLogItem { GameTime = time, Text = text });
                     }
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 return (System.Collections.Generic.IReadOnlyList<GameLogItem>)list;
             }, name: "GetRecentGameLogs", ct: cts.Token);
         }

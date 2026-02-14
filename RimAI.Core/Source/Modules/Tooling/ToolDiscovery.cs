@@ -21,7 +21,7 @@ namespace RimAI.Core.Source.Modules.Tooling
 						list.Add(tool);
 					}
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
 			return list.OrderBy(t => t.Name).ToList();
 		}

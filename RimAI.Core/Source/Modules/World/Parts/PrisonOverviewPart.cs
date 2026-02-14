@@ -72,9 +72,9 @@ namespace RimAI.Core.Source.Modules.World.Parts
                                     else mode = excl.defName ?? excl.label ?? excl.ToString();
                                 }
                             }
-                            catch { }
+                            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                             // 非排他 Convert 开关（某些版本流程依赖该开关）
-                            try { if (string.IsNullOrEmpty(mode) && guest.IsInteractionEnabled(PrisonerInteractionModeDefOf.Convert)) mode = "Convert"; } catch { }
+                            try { if (string.IsNullOrEmpty(mode) && guest.IsInteractionEnabled(PrisonerInteractionModeDefOf.Convert)) mode = "Convert"; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                             if (!string.IsNullOrEmpty(mode) && !string.Equals(mode, "NoInteraction", StringComparison.OrdinalIgnoreCase))
                             {
@@ -88,8 +88,8 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         }
 
                         // 风险信号：饥饿、情绪低、没有牢房（睡地/非监狱床）
-                        try { if (p.needs?.food?.CurCategory == HungerCategory.Starving || p.needs?.food?.CurCategory == HungerCategory.UrgentlyHungry) hungerIssues++; } catch { }
-                        try { if (p.needs?.mood != null && p.needs.mood.CurLevel <= (p.mindState?.mentalBreaker?.BreakThresholdMajor ?? 0.35f)) angryCount++; } catch { }
+                        try { if (p.needs?.food?.CurCategory == HungerCategory.Starving || p.needs?.food?.CurCategory == HungerCategory.UrgentlyHungry) hungerIssues++; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                        try { if (p.needs?.mood != null && p.needs.mood.CurLevel <= (p.mindState?.mentalBreaker?.BreakThresholdMajor ?? 0.35f)) angryCount++; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                         bool hasPrisonBed = false;
                         try
@@ -97,10 +97,10 @@ namespace RimAI.Core.Source.Modules.World.Parts
                             var bed = p.CurrentBed();
                             hasPrisonBed = bed != null && bed.ForPrisoners;
                         }
-                        catch { }
+                        catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                         if (!hasPrisonBed) lowSecureBeds++;
                     }
-                    catch { }
+                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 }
 
                 if (lowSecureBeds > 0)
@@ -125,7 +125,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
             }
             catch (Exception ex)
             {
-                try { Verse.Log.Warning($"[RimAI.Core] Prison overview failed: {ex.Message}"); } catch { }
+                try { Verse.Log.Warning($"[RimAI.Core] Prison overview failed: {ex.Message}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 return new PrisonOverviewSnapshot { Count = 0, Recruitables = Array.Empty<PrisonerRecruitItem>(), Risks = new[] { "error" } };
             }
         }

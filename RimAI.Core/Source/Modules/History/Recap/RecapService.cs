@@ -34,10 +34,10 @@ namespace RimAI.Core.Source.Modules.History.Recap
 			try
 			{
 				_history.OnEntryRecorded += (convKey, _) => { System.Threading.Tasks.Task.Run(() => EnqueueGenerateIfDueAsync(convKey)); };
-				_history.OnEntryEdited += (convKey, _) => { try { MarkStale(convKey, null); } catch { } };
-				_history.OnEntryDeleted += (convKey, _) => { try { MarkStale(convKey, null); } catch { } };
+				_history.OnEntryEdited += (convKey, _) => { try { MarkStale(convKey, null); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } };
+				_history.OnEntryDeleted += (convKey, _) => { try { MarkStale(convKey, null); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } };
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		public async Task EnqueueGenerateIfDueAsync(string convKey, CancellationToken ct = default)
@@ -215,7 +215,7 @@ namespace RimAI.Core.Source.Modules.History.Recap
 			}
 			mergedSb.Append(convSb.ToString());
 			messages.Add(new RimAI.Framework.Contracts.ChatMessage { Role = "user", Content = mergedSb.ToString() });
-			try { Verse.Log.Message($"[RimAI.Core][Recap] Build payload conv={convKey} windowAI={windowItems.Count} usersAdded={userLines} aiAdded={aiLines}"); } catch { }
+			try { Verse.Log.Message($"[RimAI.Core][Recap] Build payload conv={convKey} windowAI={windowItems.Count} usersAdded={userLines} aiAdded={aiLines}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			// 固定打印 Payload 详情，便于对齐 LLM 输入
 			try
 			{
@@ -228,7 +228,7 @@ namespace RimAI.Core.Source.Modules.History.Recap
 				}
 				Verse.Log.Message(logSb.ToString());
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
 			using (var cts = CancellationTokenSource.CreateLinkedTokenSource(ct))
 			{
@@ -310,7 +310,7 @@ namespace RimAI.Core.Source.Modules.History.Recap
 					notifyId = existing.Id;
 				}
 			}
-			try { OnRecapUpdated?.Invoke(convKey, notifyId); } catch { }
+			try { OnRecapUpdated?.Invoke(convKey, notifyId); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		private string BuildRecapSystemPrompt(int maxChars, string existingRecaps)
@@ -395,7 +395,7 @@ namespace RimAI.Core.Source.Modules.History.Recap
 			}
 			if (updated)
 			{
-				try { OnRecapUpdated?.Invoke(convKey, recapId); } catch { }
+				try { OnRecapUpdated?.Invoke(convKey, recapId); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
 			return updated;
 		}
@@ -413,7 +413,7 @@ namespace RimAI.Core.Source.Modules.History.Recap
 			}
 			if (removed)
 			{
-				try { OnRecapUpdated?.Invoke(convKey, recapId); } catch { }
+				try { OnRecapUpdated?.Invoke(convKey, recapId); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
 			return removed;
 		}

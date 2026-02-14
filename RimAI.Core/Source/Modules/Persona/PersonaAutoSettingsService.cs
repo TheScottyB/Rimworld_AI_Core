@@ -47,7 +47,7 @@ namespace RimAI.Core.Source.Modules.Persona
 				snap.PersonaBindings.Items = _map ?? new Dictionary<string, string>();
 				_persistence.ReplaceLastSnapshotForDebug(snap);
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		public bool GetAutoBio(string entityId)

@@ -29,7 +29,7 @@ namespace RimAI.Core.Source.Infrastructure.Localization
 			var normalized = NormalizeLocale(locale);
 			if (string.Equals(_defaultLocale, normalized, StringComparison.OrdinalIgnoreCase)) return;
 			_defaultLocale = normalized;
-			try { OnLocaleChanged?.Invoke(normalized); } catch { }
+			try { OnLocaleChanged?.Invoke(normalized); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		public IEnumerable<string> GetAvailableLocales()

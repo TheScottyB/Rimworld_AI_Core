@@ -41,7 +41,7 @@ namespace RimAI.Core.Source.Modules.Persistence.Parts
                         }
                     }
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 Scribe_Poco.LookJsonDict(ref recaps, "items");
                 Scribe.ExitNode();
                 sw.Stop();

@@ -38,13 +38,13 @@ namespace RimAI.Core.Source.Modules.Tooling.Execution
                     }
                     if (!found) return new { ok = false, error = "ERROR: tool_not_loaded_by_any_server" };
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                 // Parse args (new): server_level injected by callers; llm_score required
                 int serverLevel = 1;
                 int score = 0;
                 if (args != null && args.TryGetValue("llm_score", out var sc)) int.TryParse(sc?.ToString() ?? "0", NumberStyles.Integer, CultureInfo.InvariantCulture, out score);
-                bool inspection = false; try { if (args != null && args.TryGetValue("inspection", out var ins)) bool.TryParse(ins?.ToString() ?? "false", out inspection); } catch { }
+                bool inspection = false; try { if (args != null && args.TryGetValue("inspection", out var ins)) bool.TryParse(ins?.ToString() ?? "false", out inspection); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 try
                 {
                     if (args != null && args.TryGetValue("server_level", out var lvObj))

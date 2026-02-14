@@ -49,7 +49,7 @@ namespace RimAI.Core.Source.Modules.Tooling.Execution
 					// 0–24 小时随机冷却：若处于冷却，直接返回；否则应用并设置新的冷却
 					if (!ReactionCooldown.TryEnter(pawnLoadId.Value))
 					{
-						try { Verse.Log.Message($"[RimAI.Core][Reaction] Cooldown active for pawn {pawnLoadId.Value}, skip."); } catch { }
+						try { Verse.Log.Message($"[RimAI.Core][Reaction] Cooldown active for pawn {pawnLoadId.Value}, skip."); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					}
 					else
 					{
@@ -58,7 +58,7 @@ namespace RimAI.Core.Source.Modules.Tooling.Execution
 					}
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
 			return Task.FromResult<object>(new { ok = true, applied_delta = delta, applied_title = title });
 		}

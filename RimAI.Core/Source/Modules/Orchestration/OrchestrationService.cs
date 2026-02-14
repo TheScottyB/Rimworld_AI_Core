@@ -55,7 +55,7 @@ namespace RimAI.Core.Source.Modules.Orchestration
 						return new ToolCallsResult { Mode = mode, Profile = profile, IsSuccess = false, Error = "embedding_disabled", ExposedTools = Array.Empty<string>(), DecidedCalls = Array.Empty<ToolCallRecord>(), Executions = Array.Empty<ToolExecutionRecord>(), TotalLatencyMs = 0 };
 					}
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
 			var start = DateTime.UtcNow;
 			// 统一注入“最大工具等级”：混合参与者时取最大等级为门槛（pawn 视为 Lv1；server/thing 查询真实等级）。
@@ -100,10 +100,10 @@ namespace RimAI.Core.Source.Modules.Orchestration
 											}
 										}
 									}
-									catch { }
+									catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 								}
 							}
-							catch { }
+							catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 						}
 					}
 				}
@@ -118,9 +118,9 @@ namespace RimAI.Core.Source.Modules.Orchestration
 						injected.IncludeWhitelist = new List<string>(distinct);
 					}
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			var toolsTuple = mode == OrchestrationMode.Classic
 				? await _classic.GetToolsAsync(userInput, participantIds, mode, injected, ct).ConfigureAwait(false)
 				: await _narrow.GetToolsAsync(userInput, participantIds, mode, injected, ct).ConfigureAwait(false);
@@ -134,7 +134,7 @@ namespace RimAI.Core.Source.Modules.Orchestration
 			var convId = BuildConvKey(participantIds);
 			var systemPrompt = "You are a function-calling planner. Decide the best tool to satisfy the user's request. Return exactly one tool call via tool_calls and nothing else. Do not output natural language.";
 			// 先尝试失效会话缓存，避免命中无工具版本的缓存回复
-			try { await _llm.InvalidateConversationCacheAsync(convId, ct).ConfigureAwait(false); } catch { }
+			try { await _llm.InvalidateConversationCacheAsync(convId, ct).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			// 注意：为确保模型通过 function calling 返回 tool_calls，这里禁用 JSON 强制模式
 			var messages = new List<RimAI.Framework.Contracts.ChatMessage>
 			{
@@ -166,10 +166,10 @@ namespace RimAI.Core.Source.Modules.Orchestration
 						var b = (userInput ?? string.Empty).Trim();
 						currentUserAlreadyInHistory = !string.IsNullOrEmpty(b) && string.Equals(a, b, StringComparison.Ordinal);
 					}
-					catch { }
+					catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			// 若用户输入已由 UI 写入历史，则不再追加重复的 user 消息
 			if (!(currentUserAlreadyInHistory))
 			{
@@ -226,14 +226,14 @@ namespace RimAI.Core.Source.Modules.Orchestration
 						var localized = _loc?.Get(locale, key, disp) ?? disp;
 						disp = string.IsNullOrWhiteSpace(localized) ? disp : localized;
 					}
-					catch { }
+					catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					var pawnName = "Pawn";
 					try
 					{
 						// 仅为叙述用途，从 participantIds 粗略解析 pawn:xxx
 						pawnName = "Pawn";
 					}
-					catch { }
+					catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					var line = _loc?.Format(options?.Locale ?? _loc?.GetDefaultLocale() ?? "en", "orchestration.plantrace.hit_tool", new System.Collections.Generic.Dictionary<string, string>
 					{
 						{ "pawn", pawnName },
@@ -242,7 +242,7 @@ namespace RimAI.Core.Source.Modules.Orchestration
 					if (!string.IsNullOrWhiteSpace(line))
 					{
 						plan.Add(line);
-						try { await _history.AppendRecordAsync(convId, "ChatUI", "agent:stage", "chat", line, advanceTurn: false, ct: ct).ConfigureAwait(false); } catch { }
+						try { await _history.AppendRecordAsync(convId, "ChatUI", "agent:stage", "chat", line, advanceTurn: false, ct: ct).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					}
 				}
 
@@ -275,7 +275,7 @@ namespace RimAI.Core.Source.Modules.Orchestration
 							await _history.AppendRecordAsync(convId, "ChatUI", $"tool:{toolName}", "tool_call", compact, advanceTurn: false, ct: ct).ConfigureAwait(false);
 						}
 					}
-					catch { }
+					catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				}
 				catch (NotImplementedException)
 				{
@@ -349,7 +349,7 @@ namespace RimAI.Core.Source.Modules.Orchestration
 				n = jo[(object)"name"]?.ToString() ?? jo[(object)"Name"]?.ToString();
 				return string.IsNullOrWhiteSpace(n) ? null : n;
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			return null;
 		}
 
@@ -368,7 +368,7 @@ namespace RimAI.Core.Source.Modules.Orchestration
 				var scoreSummary = OrchestrationLogging.SummarizeScores(tools.scores);
 				System.Diagnostics.Debug.WriteLine($"[RimAI.Core][P5] ok mode={mode} profile={profile} exposed={tools.toolsJson?.Count ?? 0} decided={decided} executed={executed} scores={scoreSummary} conv={OrchestrationLogging.HashConv(convId)} totalMs={totalMs}");
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 	}
 }

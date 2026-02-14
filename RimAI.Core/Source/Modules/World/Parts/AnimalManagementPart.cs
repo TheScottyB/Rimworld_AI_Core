@@ -70,8 +70,8 @@ namespace RimAI.Core.Source.Modules.World.Parts
                 // 可选训练定义：Rescue/Haul 在当前版本可能不存在，使用名称查找以兼容不同版本
                 TrainableDef defRescue = null;
                 TrainableDef defHaul = null;
-                try { defRescue = DefDatabase<TrainableDef>.GetNamedSilentFail("Rescue"); } catch { }
-                try { defHaul = DefDatabase<TrainableDef>.GetNamedSilentFail("Haul"); } catch { }
+                try { defRescue = DefDatabase<TrainableDef>.GetNamedSilentFail("Rescue"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                try { defHaul = DefDatabase<TrainableDef>.GetNamedSilentFail("Haul"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 foreach (var a in animals)
                 {
                     try
@@ -100,13 +100,13 @@ namespace RimAI.Core.Source.Modules.World.Parts
                             }
                         }
                     }
-                    catch { }
+                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 }
 
                 // 4) 饲料来源统计（TotalNutrition）与动物日需求估算（DailyNeed）
                 var foodSources = new List<FoodSourceItem>();
                 float totalNutrition = 0f;
-                try { map.resourceCounter?.UpdateResourceCounts(); } catch { }
+                try { map.resourceCounter?.UpdateResourceCounts(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 var all = map.resourceCounter?.AllCountedAmounts ?? new Dictionary<ThingDef, int>();
                 foreach (var kv in all)
                 {
@@ -118,7 +118,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                     bool humanOnly = false; try { humanOnly = def.ingestible?.HumanEdible == true && def.ingestible?.preferability == FoodPreferability.MealLavish; } catch { humanOnly = false; }
                     // 但动物也能吃生肉/蔬菜等，人类可食不必排除。我们只排除明确的奢华饭等
                     if (humanOnly) continue;
-                    float nutPer = 0f; try { nutPer = def.GetStatValueAbstract(StatDefOf.Nutrition); } catch { }
+                    float nutPer = 0f; try { nutPer = def.GetStatValueAbstract(StatDefOf.Nutrition); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                     if (nutPer <= 0f) continue;
                     float sum = nutPer * count;
                     totalNutrition += sum;
@@ -138,7 +138,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         // 系数：每体型单位每日约 1.6 营养（经验近似）。
                         dailyNeed += 1.6f * Math.Max(0.2f, bodySize);
                     }
-                    catch { }
+                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 }
 
                 float days = (dailyNeed > 0f) ? (totalNutrition / dailyNeed) : 0f;
@@ -152,7 +152,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
             }
             catch (Exception ex)
             {
-                try { Verse.Log.Warning($"[RimAI.Core] Animal management failed: {ex.Message}"); } catch { }
+                try { Verse.Log.Warning($"[RimAI.Core] Animal management failed: {ex.Message}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 return new AnimalManagementSnapshot
                 {
                     Counts = new AnimalCounts { Total = 0, Species = Array.Empty<SpeciesCountItem>() },

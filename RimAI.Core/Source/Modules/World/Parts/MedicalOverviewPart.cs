@@ -77,7 +77,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                                     if (h.TryGetComp<HediffComp_TendDuration>() is HediffComp_TendDuration td && td.IsTended) { tendedAny = true; break; }
                                 }
                             }
-                            catch { }
+                            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                             (groups.Bleeding as List<MedicalBleedingItem>).Add(new MedicalBleedingItem
                             {
                                 Pawn = p.LabelShortCap.ToString(),
@@ -105,7 +105,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                                 });
                             }
                         }
-                        catch { }
+                        catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                         // 感染（免疫性）
                         try
@@ -129,7 +129,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                                 infected++;
                             }
                         }
-                        catch { }
+                        catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                         // 手术计划
                         try
@@ -157,7 +157,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                                 }
                             }
                         }
-                        catch { }
+                        catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                         // 逐人明细（v1 先含 overall + hediffs）
                         var heItems = new List<MedicalHediffItem>();
@@ -169,7 +169,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                                 heItems.Add(ToHediffItem(h));
                             }
                         }
-                        catch { }
+                        catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                         // 能力
                         MedicalCapacities caps = null;
@@ -189,7 +189,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                                 BloodFiltration = Lv(PawnCapacityDefOf.BloodFiltration)
                             };
                         }
-                        catch { }
+                        catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                         // 部位 hpPct（TopN 可在未来裁剪；v1 全量输出主要部位）
                         List<MedicalPartItem> parts = null;
@@ -202,7 +202,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                                 foreach (var part in hs.GetNotMissingParts())
                                 {
                                     float cur = 0f, max = 1f;
-                                    try { cur = hs.GetPartHealth(part); max = part.def.GetMaxHealth(p); } catch { }
+                                    try { cur = hs.GetPartHealth(part); max = part.def.GetMaxHealth(p); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                                     float hpPct = (max > 0.0001f) ? Mathf.Clamp01(cur / max) : 1f;
                                     string tier = "none";
                                     try
@@ -217,7 +217,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                                             else tier = "prosthetic";
                                         }
                                     }
-                                    catch { }
+                                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                                     parts.Add(new MedicalPartItem
                                     {
                                         PartLabel = part.LabelCap,
@@ -246,10 +246,10 @@ namespace RimAI.Core.Source.Modules.World.Parts
                                         }
                                     }
                                 }
-                                catch { }
+                                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                             }
                         }
-                        catch { }
+                        catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                         pawnItems.Add(new MedicalPawnItem
                         {
@@ -268,7 +268,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                             ScheduledOps = (groups.Operations as List<MedicalOperationItem>).Where(x => x.PawnLoadId == p.thingIDNumber).ToList()
                         });
                     }
-                    catch { }
+                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 }
 
                 int risk = 0;
@@ -288,7 +288,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                     }
                     risk = Math.Max(0, Math.Min(100, risk));
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                 // 提示
                 if (bleeding > 0)
@@ -367,7 +367,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                 else if (item.IsDisease) cat = "disease";
                 item.Category = cat;
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             return item;
         }
     }

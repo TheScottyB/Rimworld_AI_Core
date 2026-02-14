@@ -49,9 +49,9 @@ namespace RimAI.Core.Source.Modules.World.Parts
                     try
                     {
                         // 在较新版本 API 下，直接设置 Goodwill 前，先确保不是敌对关系
-                        try { Faction.OfPlayer.RelationKindWith(target); } catch { }
+                        try { Faction.OfPlayer.RelationKindWith(target); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                     }
-                    catch { }
+                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                     try
                     {
@@ -86,7 +86,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                     if (f != null && f.loadID == loadId) return f;
                 }
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             return null;
         }
     }

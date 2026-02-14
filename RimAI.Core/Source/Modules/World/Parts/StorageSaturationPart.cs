@@ -129,7 +129,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                 var lbl = SlotGroup.GetGroupLabel(sg);
                 if (!string.IsNullOrWhiteSpace(lbl)) return lbl;
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             return "Storage";
         }
     }

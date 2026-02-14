@@ -65,7 +65,7 @@ namespace RimAI.Core.Source.Modules.Persona.Biography
 					foreach (var m in messages) { if (m?.Role == "system") sysOut = m.Content ?? string.Empty; else if (m?.Role == "user") userOut = m.Content ?? string.Empty; }
 					Verse.Log.Message("[RimAI.Core][P7] Persona Biography Payload\nconv=" + req.ConvKey + "\n--- System ---\n" + sysOut + "\n--- User ---\n" + userOut);
 				} 
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				var ureq = new UnifiedChatRequest { ConversationId = req.ConvKey, Messages = messages, Stream = false };
 				var r = await _llm.GetResponseAsync(ureq, cts.Token).ConfigureAwait(false);
 				if (!r.IsSuccess)

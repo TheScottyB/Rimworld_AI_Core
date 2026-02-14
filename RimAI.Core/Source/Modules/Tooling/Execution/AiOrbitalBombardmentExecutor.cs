@@ -99,17 +99,17 @@ namespace RimAI.Core.Source.Modules.Tooling.Execution
 						}
 					}
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				var rng = new System.Random(unchecked(Environment.TickCount ^ radius ^ serverLevel));
 				int strikes = rng.Next(minStrikes, maxStrikes + 1);
 
 				// 开始提示
-				try { await action.ShowTopLeftMessageAsync("RimAI.Bombardment.Start".Translate(), RimWorld.MessageTypeDefOf.ThreatBig, ct).ConfigureAwait(false); } catch { }
+				try { await action.ShowTopLeftMessageAsync("RimAI.Bombardment.Start".Translate(), RimWorld.MessageTypeDefOf.ThreatBig, ct).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
 				var executed = await action.TryDevExplosionsNearEnemiesAsync(strikes, radius, ct).ConfigureAwait(false);
 
 				// 结束提示
-				try { await action.ShowTopLeftMessageAsync("RimAI.Bombardment.End".Translate(), RimWorld.MessageTypeDefOf.PositiveEvent, ct).ConfigureAwait(false); } catch { }
+				try { await action.ShowTopLeftMessageAsync("RimAI.Bombardment.End".Translate(), RimWorld.MessageTypeDefOf.PositiveEvent, ct).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
 				// 冷却写入
 				snap.OrbitalBombardment.LastAtAbsTicks = (int)nowAbs;

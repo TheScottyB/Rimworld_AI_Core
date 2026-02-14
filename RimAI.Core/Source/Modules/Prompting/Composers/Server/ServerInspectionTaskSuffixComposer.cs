@@ -24,7 +24,7 @@ namespace RimAI.Core.Source.Modules.Prompting.Composers.Server
                              ?? "[Important: Current Task] You are executing an automated base inspection; summarize and record the following system JSON.";
                 if (!string.IsNullOrWhiteSpace(suffix)) lines.Add(suffix);
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             return Task.FromResult(new ComposerOutput { SystemLines = lines, ContextBlocks = System.Array.Empty<ContextBlock>() });
         }
     }

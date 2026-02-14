@@ -38,7 +38,7 @@ namespace RimAI.Core.Source.Modules.Prompting.Composers.Server
                         if (p.StartsWith("server:")) { var id = p.Substring(7); if (int.TryParse(id, out var n)) { entityId = $"thing:{n}"; break; } }
                     }
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 if (string.IsNullOrWhiteSpace(entityId)) return new ComposerOutput { SystemLines = lines, ContextBlocks = Array.Empty<ContextBlock>() };
 
                 // 读取服务器温度（当前 WorldDataService 返回固定 37；后续 M2 会扩展）
@@ -55,7 +55,7 @@ namespace RimAI.Core.Source.Modules.Prompting.Composers.Server
                     lines.Add(line);
                 }
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             return new ComposerOutput { SystemLines = lines, ContextBlocks = Array.Empty<ContextBlock>() };
         }
     }

@@ -101,14 +101,14 @@ namespace RimAI.Core.Source.UI.ServerChatWindow
 			_stage = _container.Resolve<IStageService>();
 
 			// 若从按钮携带了服务器实体ID，则直接初始化当前会话与标题/icon
-			try { InitializeFromEntityId(_serverEntityId); } catch { }
+			try { InitializeFromEntityId(_serverEntityId); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
 		}
 
 		public override void PreOpen()
 		{
 			// 互斥：打开本窗口前，若普通 ChatWindow 已开启，则将其关闭
-			try { Verse.Find.WindowStack?.TryRemove(typeof(RimAI.Core.Source.UI.ChatWindow.ChatWindow), true); } catch { }
+			try { Verse.Find.WindowStack?.TryRemove(typeof(RimAI.Core.Source.UI.ChatWindow.ChatWindow), true); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			base.PreOpen();
 		}
 
@@ -159,7 +159,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow
 				}
 				_controller.State.PlayerTitle = title;
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			var name = _currentServerThingId.HasValue ? ($"SN-{_currentServerThingId.Value:X}") : (!string.IsNullOrWhiteSpace(_currentServerTitle) ? _currentServerTitle : "AI Server");
 			ServerConversationHeader.Draw(titleRect, _serverAvatar, name, sub);
 
@@ -213,7 +213,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow
 					_servers = list;
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		// Persona 页面的简单状态
@@ -252,12 +252,12 @@ namespace RimAI.Core.Source.UI.ServerChatWindow
 							var parts = _history.GetParticipantsOrEmpty(convKey) ?? new List<string>();
 							foreach (var p in parts) { if (p != null && p.StartsWith("server:")) { var s = p.Substring("server:".Length); if (int.TryParse(s, out var v)) { id = v; break; } } }
 						}
-						catch { }
+						catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 						if (id.HasValue) { _currentServerThingId = id.Value; }
 						EnsureChatController();
 						_activeTab = ServerTab.Chat;
 					}
-					catch { }
+					catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				});
 		}
 
@@ -304,7 +304,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow
 					_server?.SetBaseServerPersonaPreset(entityId, _personaPresetKey);
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		private void OnSavePersona()
@@ -317,7 +317,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow
 				_server?.SetBaseServerPersonaOverride(entityId, string.IsNullOrWhiteSpace(_personaContent) ? null : _personaContent);
 				if (!string.IsNullOrWhiteSpace(_personaPresetKey)) _server?.SetBaseServerPersonaPreset(entityId, _personaPresetKey);
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		private void OnClearPersonaOverride()
@@ -329,7 +329,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow
 				_server?.SetBaseServerPersonaOverride(entityId, null);
 				_personaContent = string.Empty;
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		private void LoadPersonaStateForCurrent()
@@ -366,9 +366,9 @@ namespace RimAI.Core.Source.UI.ServerChatWindow
 						_personaName = string.Empty;
 					}
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		private void RefreshChatForCurrentKey()
@@ -407,7 +407,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow
 					_serverAvatar = GetServerIcon(new ServerListItem { ThingId = id, Level = _currentServerLevel });
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		private void OnSelectServer(ServerListItem item)
@@ -426,7 +426,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow
 				_activeTab = ServerTab.Chat;
 				EnsureChatController();
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		private void EnsureChatController()
@@ -450,7 +450,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow
 					_ = _controller.StartAsync();
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		private void DrawChatBody(Rect bodyRect)
@@ -465,7 +465,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow
 			if (_controller != null)
 			{
 				// 合并后台初始化消息到可见消息列表
-				try { while (_controller.State.PendingInitMessages.TryDequeue(out var initMsg)) { _controller.State.Messages.Add(initMsg); } } catch { }
+				try { while (_controller.State.PendingInitMessages.TryDequeue(out var initMsg)) { _controller.State.Messages.Add(initMsg); } } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				Parts.ServerChatMain.Draw(
 					transcriptRect,
 					indicatorRect,
@@ -475,7 +475,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow
 					ref _scrollTranscript,
 					ref _lastTranscriptContentHeight,
 					ref _historyWritten,
-					onCancel: () => { try { _controller.CancelStreaming(); if (!string.IsNullOrEmpty(_controller.State.LastUserInputStash)) { _inputText = _controller.State.LastUserInputStash; _controller.State.LastUserInputStash = null; } } catch { } },
+					onCancel: () => { try { _controller.CancelStreaming(); if (!string.IsNullOrEmpty(_controller.State.LastUserInputStash)) { _inputText = _controller.State.LastUserInputStash; _controller.State.LastUserInputStash = null; } } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } },
 					onSmalltalkAsync: async t => { if (!string.IsNullOrWhiteSpace(t)) { _historyWritten = false; _controller.State.FinalCommittedThisTurn = false; await _controller.SendSmalltalkAsync(t); } },
 					onCommandAsync: async t => { if (!string.IsNullOrWhiteSpace(t)) { _historyWritten = false; _controller.State.FinalCommittedThisTurn = false; await _controller.SendCommandAsync(t); } }
 				);
@@ -502,7 +502,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow
 					}
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			return null;
 		}
 
@@ -542,9 +542,9 @@ namespace RimAI.Core.Source.UI.ServerChatWindow
 				var lvl = await _world.GetAiServerLevelAsync(thingId).ConfigureAwait(false);
 				_currentServerLevel = lvl <= 0 ? 1 : lvl;
 				// 同步到 ServerService 以修正早期记录的默认等级（并调整槽位容量）
-				try { _server?.GetOrCreate($"thing:{thingId}", _currentServerLevel); } catch { }
+				try { _server?.GetOrCreate($"thing:{thingId}", _currentServerLevel); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 
@@ -565,7 +565,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow
 					}
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			return null;
 		}
 

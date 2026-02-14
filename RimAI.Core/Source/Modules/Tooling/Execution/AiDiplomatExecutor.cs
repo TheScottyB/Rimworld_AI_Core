@@ -82,7 +82,7 @@ namespace RimAI.Core.Source.Modules.Tooling.Execution
             }
             catch (Exception ex)
             {
-                try { Verse.Log.Error($"[RimAI.Core][P13] ai_diplomat failed: {ex}"); } catch { }
+                try { Verse.Log.Error($"[RimAI.Core][P13] ai_diplomat failed: {ex}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 return new { ok = false, error = "exception" };
             }
         }

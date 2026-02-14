@@ -80,7 +80,7 @@ namespace RimAI.Core.Source.Modules.Prompting
             _composers.Add(new Composers.ChatUI.EnvBeautyComposer());
             _composers.Add(new Composers.ChatUI.EnvTerrainComposer());
             // P13: 将 Server 状态合入（可开关）
-            try { _composers.Add(new Composers.ChatUI.ServerStatusComposer(RimAI.Core.Source.Boot.RimAICoreMod.Container.Resolve<RimAI.Core.Source.Modules.Server.IServerService>())); } catch { }
+            try { _composers.Add(new Composers.ChatUI.ServerStatusComposer(RimAI.Core.Source.Boot.RimAICoreMod.Container.Resolve<RimAI.Core.Source.Modules.Server.IServerService>())); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             _composers.Add(new Composers.ChatUI.UserPrefixComposer());
 
             // Stage Scope：群聊（环境 + 参与者摘要）
