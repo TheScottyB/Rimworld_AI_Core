@@ -31,10 +31,10 @@ namespace RimAI.Core.Source.Modules.Prompting.Composers.ServerStage
 						if (pack?.SystemLines != null && pack.SystemLines.Count > 0) lines.AddRange(pack.SystemLines);
 						if (pack?.ContextBlocks != null && pack.ContextBlocks.Count > 0) blocks.AddRange(pack.ContextBlocks);
 					}
-					catch { }
+					catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			return new ComposerOutput { SystemLines = lines, ContextBlocks = blocks };
 		}
 	}

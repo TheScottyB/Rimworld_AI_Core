@@ -60,12 +60,12 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         try
                         {
                             var dest = CellFinder.RandomClosewalkCellNear(center, map, radius);
-                            try { if (pawn.drafter != null) pawn.drafter.Drafted = false; } catch { }
+                            try { if (pawn.drafter != null) pawn.drafter.Drafted = false; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                             pawn.jobs?.StartJob(new Job(JobDefOf.Goto, dest), JobCondition.InterruptForced, null, resumeCurJobAfterwards: false);
                             pawn.jobs?.jobQueue?.EnqueueLast(new Job(JobDefOf.Wait));
                             anyIssued = true;
                         }
-                        catch { }
+                        catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                     }
 
                     return anyIssued;

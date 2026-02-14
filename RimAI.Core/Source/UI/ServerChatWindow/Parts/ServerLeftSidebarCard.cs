@@ -56,7 +56,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow.Parts
 				var row = new Rect(0f, yy, viewRect.width, rowH);
 				Widgets.DrawHighlightIfMouseover(row);
 				Texture tex = null;
-				try { tex = getIcon?.Invoke(s); } catch { }
+				try { tex = getIcon?.Invoke(s); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				var avatarRect = new Rect(row.x + 4f, row.y - 1f + 5f, rowH - 8f, rowH - 8f);
 				if (tex != null) GUI.DrawTexture(avatarRect, tex, ScaleMode.ScaleToFit);
 				var textX = avatarRect.xMax + 6f;

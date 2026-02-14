@@ -30,7 +30,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 					}
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			float rowH = 54f;
 			var viewRect = new Rect(0f, 0f, inRect.width - 16f, Mathf.Max(inRect.height, items.Count * (rowH + 6f) + 8f));
 			Widgets.BeginScrollView(inRect, ref scrollRight, viewRect);
@@ -40,7 +40,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 				var row = new Rect(0f, y, viewRect.width, rowH);
 				Widgets.DrawHighlightIfMouseover(row);
 				Texture tex = null;
-				try { tex = PortraitsCache.Get(p, new Vector2(rowH - 6f, rowH - 6f), Rot4.South); } catch { }
+				try { tex = PortraitsCache.Get(p, new Vector2(rowH - 6f, rowH - 6f), Rot4.South); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				var avatarRect = new Rect(row.x + 6f, row.y + 3f, rowH - 6f, rowH - 6f);
 				if (tex != null) GUI.DrawTexture(avatarRect, tex, ScaleMode.ScaleToFit);
 				float appointW = 120f;
@@ -134,7 +134,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 							: overrideLocale;
 						json = loc?.Get(locale, "persona.job_presets.json", string.Empty);
 					}
-					catch { }
+					catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					if (!string.IsNullOrWhiteSpace(json))
 					{
 						var arr = Newtonsoft.Json.Linq.JArray.Parse(json);
@@ -149,7 +149,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 						if (Widgets.ButtonText(rect, "RimAI.ChatUI.Presets.Select".Translate())) { if (floatMenu.Count > 0) Find.WindowStack.Add(new FloatMenu(floatMenu)); }
 					}
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
 		}
 	}

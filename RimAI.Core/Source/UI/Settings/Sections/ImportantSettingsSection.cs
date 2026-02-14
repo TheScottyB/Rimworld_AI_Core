@@ -43,7 +43,7 @@ namespace RimAI.Core.Source.UI.Settings.Sections
                 try { _toolCallMode = (_config?.Current != null) ? _config.Current.ToolCallMode : RimAI.Core.Contracts.Config.ToolCallMode.Classic; } catch { _toolCallMode = RimAI.Core.Contracts.Config.ToolCallMode.Classic; }
                 try { var llm = RimAI.Core.Source.Boot.RimAICoreMod.Container.Resolve<RimAI.Core.Source.Modules.LLM.ILLMService>(); _embeddingEnabled = llm?.IsEmbeddingEnabled() ?? false; } catch { _embeddingEnabled = false; }
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		public string Id => "important";
@@ -153,7 +153,7 @@ namespace RimAI.Core.Source.UI.Settings.Sections
 				_dangerousConfirm = _cfgInternal?.GetToolingConfig()?.DangerousToolConfirmation ?? false;
 				_llmTimeoutMs = _cfgInternal?.GetLlmConfig()?.DefaultTimeoutMs ?? 15000;
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		private void Apply()

@@ -25,10 +25,10 @@ namespace RimAI.Core.Source.Modules.Server
 				{
 					var victim = list[i];
 					if (victim == null) continue;
-					try { await _history.DeleteEntryAsync(convKey, victim.Id, ct).ConfigureAwait(false); } catch { }
+					try { await _history.DeleteEntryAsync(convKey, victim.Id, ct).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 	}
 }

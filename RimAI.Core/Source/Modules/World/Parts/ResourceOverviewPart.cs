@@ -45,7 +45,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
 					// 食物：根据每日营养需求折算件耗
 					if (def.IsNutritionGivingIngestible && def.ingestible?.HumanEdible == true && dailyNutritionNeed > 0)
 					{
-						float nutPer = 0f; try { nutPer = def.GetStatValueAbstract(StatDefOf.Nutrition); } catch { }
+						float nutPer = 0f; try { nutPer = def.GetStatValueAbstract(StatDefOf.Nutrition); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 						if (nutPer > 0f) dailyUse = dailyNutritionNeed / nutPer;
 					}
 					// 药品：按（殖民者数 * 0.05 瓶/天）粗估

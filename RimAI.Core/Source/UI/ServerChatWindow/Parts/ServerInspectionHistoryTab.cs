@@ -28,7 +28,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow.Parts
 						}
 					}
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				// 退路：直接从会话键文本中解析 server:<id>
 				if (!thingId.HasValue && !string.IsNullOrWhiteSpace(uiConvKey))
 				{
@@ -45,7 +45,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow.Parts
 							}
 						}
 					}
-					catch { }
+					catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				}
 				var list = new List<string> { "agent:server_inspection", thingId.HasValue ? ($"server_inspection:{thingId.Value}") : "server_inspection:unknown" };
 				list.Sort(StringComparer.Ordinal);
@@ -93,7 +93,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow.Parts
 				_ = Task.Run(async () =>
 				{
 					try { await history.ClearThreadAsync(convKey).ConfigureAwait(false); }
-					catch { }
+					catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					finally { state.Clearing = false; state.Entries = null; }
 				});
 			}

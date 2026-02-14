@@ -45,7 +45,7 @@ namespace RimAI.Core.Source.Modules.Prompting.Composers.ChatUI
 				}
 				output.SystemLines = lines;
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			return System.Threading.Tasks.Task.FromResult(output);
 		}
 	}

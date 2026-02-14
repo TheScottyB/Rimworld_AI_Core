@@ -112,7 +112,7 @@ namespace RimAI.Core.Source.Modules.LLM
 					return CallWithRetryAsync(conversationId, ct => RimAIApi.GetCompletionWithToolsAsync(messages, toolList, conversationId, ct), cancellationToken);
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
 			// 回退路径：无可用工具时，构造标准非流式请求（不做旧版字段注入）
 			System.Diagnostics.Debug.WriteLine("[RimAI.Core][P2.LLM] No valid tools provided; falling back to plain completion.");
@@ -152,7 +152,7 @@ namespace RimAI.Core.Source.Modules.LLM
 					}
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
 			if (toolList.Count > 0 && request.Messages != null)
 			{
@@ -334,7 +334,7 @@ namespace RimAI.Core.Source.Modules.LLM
 					}
 					last = DateTime.UtcNow;
 					// 重置心跳计时（下一分片超时）
-					try { if (hbTimeoutMs > 0) watchdogCts.CancelAfter(hbTimeoutMs); } catch { }
+					try { if (hbTimeoutMs > 0) watchdogCts.CancelAfter(hbTimeoutMs); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					yield return result;
 					if (result.Value != null && result.Value.FinishReason != null)
 					{
@@ -360,7 +360,7 @@ namespace RimAI.Core.Source.Modules.LLM
 				if (failBeforeFirstChunk && attempt < _retryMaxAttempts)
 				{
 					var delay = (int)(_retryBaseDelayMs * Math.Pow(2, attempt - 1));
-					try { await Task.Delay(delay, cancellationToken).ConfigureAwait(false); } catch { }
+					try { await Task.Delay(delay, cancellationToken).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					continue;
 				}
 

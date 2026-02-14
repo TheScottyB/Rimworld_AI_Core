@@ -75,7 +75,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         var age = p.ageTracker != null ? (int)UnityEngine.Mathf.Floor(p.ageTracker.AgeBiologicalYearsFloat) : 0;
                         var gender = p.gender.ToString();
                         string job = null;
-                        try { job = RimAI.Core.Source.Versioned._1_6.World.WorldApiV16.GetPawnTitle(p); } catch { }
+                        try { job = RimAI.Core.Source.Versioned._1_6.World.WorldApiV16.GetPawnTitle(p); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                         records.Add(new ColonistRecord { Name = dispName, Age = age, Gender = gender, JobTitle = job ?? string.Empty });
                         count++;
                     }
@@ -104,7 +104,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         }
                     }
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 return (IReadOnlyList<int>)list;
             }, name: "GetAllColonistLoadIds", ct: cts.Token);
         }

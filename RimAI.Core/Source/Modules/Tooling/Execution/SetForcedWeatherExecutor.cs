@@ -40,10 +40,10 @@ namespace RimAI.Core.Source.Modules.Tooling.Execution
                     }
                     if (!found) return new { ok = false, error = "ERROR: tool_not_loaded_by_any_server" };
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                 // 巡检提示模式：不执行，仅返回冷却与提示
-                bool inspection = false; try { if (args != null && args.TryGetValue("inspection", out var ins)) bool.TryParse(ins?.ToString() ?? "false", out inspection); } catch { }
+                bool inspection = false; try { if (args != null && args.TryGetValue("inspection", out var ins)) bool.TryParse(ins?.ToString() ?? "false", out inspection); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                 // Centralized config (cooldown moved to fixed 12 in-game hours)
                 var minDays = WeatherControlConfig.MinDurationDays;

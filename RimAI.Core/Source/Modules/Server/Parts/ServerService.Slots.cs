@@ -32,7 +32,7 @@ namespace RimAI.Core.Source.Modules.Server
 			// 取消全局唯一限制：允许不同服务器加载相同工具；权限校验仍在列表阶段
 			s.InspectionSlots[slotIndex] = new InspectionSlot { Index = slotIndex, ToolName = toolName, Enabled = true };
 			// 若之前未注册周期任务且巡检启用，则启动定时器
-			try { if (s.InspectionEnabled && !_periodics.ContainsKey(entityId)) StartOneScheduler(entityId, s.InspectionIntervalHours, CancellationToken.None, initialDelayTicks: 0); } catch { }
+			try { if (s.InspectionEnabled && !_periodics.ContainsKey(entityId)) StartOneScheduler(entityId, s.InspectionIntervalHours, CancellationToken.None, initialDelayTicks: 0); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		public void RemoveSlot(string entityId, int slotIndex)

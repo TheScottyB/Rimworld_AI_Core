@@ -63,7 +63,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow.Parts
 		private void KickoffReload(string filterServerEntityId)
 		{
 			_loading = true; _error = null; _entries = null; _lastServerId = filterServerEntityId;
-			try { _cts?.Cancel(); } catch { }
+			try { _cts?.Cancel(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			_cts = new CancellationTokenSource(); var ct = _cts.Token;
 			_ = Task.Run(async () =>
 			{
@@ -88,7 +88,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow.Parts
 					}
 					_entries = list;
 				}
-				catch (OperationCanceledException) { }
+				catch (OperationCanceledException ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				catch (Exception ex) { _error = ex.Message; _entries = new List<HistoryEntry>(); }
 				finally { _loading = false; }
 			});

@@ -36,10 +36,10 @@ namespace RimAI.Core.Source.Infrastructure.Scheduler
 				if (tick % 2500 == 0)
 				{
 					var stage = RimAI.Core.Source.Boot.RimAICoreMod.Container.Resolve<RimAI.Core.Source.Modules.Stage.IStageService>();
-					_ = System.Threading.Tasks.Task.Run(async () => { try { await stage.RunActiveTriggersOnceAsync(System.Threading.CancellationToken.None); } catch { } });
+					_ = System.Threading.Tasks.Task.Run(async () => { try { await stage.RunActiveTriggersOnceAsync(System.Threading.CancellationToken.None); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } });
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
 			// P4: 在第 1000 Tick 后确保索引构建（后台非阻塞）
 			if (!_toolingEnsured && tick >= 1000)
@@ -58,7 +58,7 @@ namespace RimAI.Core.Source.Infrastructure.Scheduler
 						});
 					}
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
 
 			// 新增：在小人落地后（第 2000 Tick）异步校验索引文件与工具列表是否匹配；若无文件或不匹配则自动重建
@@ -86,10 +86,10 @@ namespace RimAI.Core.Source.Infrastructure.Scheduler
 							}
 							server.StartAllSchedulers(System.Threading.CancellationToken.None);
 						}
-						catch { }
+						catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					});
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
 
 			if (!_printedReady)
@@ -145,21 +145,21 @@ namespace RimAI.Core.Source.Infrastructure.Scheduler
 						bool ok = await tooling.CheckIndexMatchesToolsAsync();
 						if (!ok)
 						{
-							try { Messages.Message("[RimAI.Core] Tool index missing or out-of-date. Rebuilding...", MessageTypeDefOf.NeutralEvent, false); } catch { }
+							try { Messages.Message("[RimAI.Core] Tool index missing or out-of-date. Rebuilding...", MessageTypeDefOf.NeutralEvent, false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 							Log.Message("[RimAI.Core][P4] Tool index missing/mismatch, rebuilding...");
 							await tooling.RebuildIndexAsync();
-							try { Messages.Message("[RimAI.Core] Tool index rebuild completed.", MessageTypeDefOf.PositiveEvent, false); } catch { }
+							try { Messages.Message("[RimAI.Core] Tool index rebuild completed.", MessageTypeDefOf.PositiveEvent, false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 							Log.Message("[RimAI.Core][P4] Tool index rebuild completed.");
 						}
 					}
 					catch (System.Exception ex)
 					{
-						try { Messages.Message("[RimAI.Core] Tool index verify/rebuild failed.", MessageTypeDefOf.NegativeEvent, false); } catch { }
+						try { Messages.Message("[RimAI.Core] Tool index verify/rebuild failed.", MessageTypeDefOf.NegativeEvent, false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 						Log.Error($"[RimAI.Core][P4] Tool index verify/rebuild failed: {ex.Message}");
 					}
 				});
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		internal SchedulerSnapshot GetSnapshot() => _scheduler?.GetSnapshot();

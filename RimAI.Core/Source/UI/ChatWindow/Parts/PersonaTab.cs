@@ -125,11 +125,11 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 							{
 								foreach (var d in drafts)
 								{
-									try { biography.Upsert(entityId, d); } catch { }
+									try { biography.Upsert(entityId, d); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 								}
 							}
 						}
-						catch (Exception ex) { try { Verse.Log.Warning($"[RimAI.Core][P10] Biography.GenerateDraft failed entity={entityId}: {ex.Message}"); } catch { } }
+						catch (Exception ex) { try { Verse.Log.Warning($"[RimAI.Core][P10] Biography.GenerateDraft failed entity={entityId}: {ex.Message}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } }
 						finally { _bioGenerating = false; ReloadBiography(biography, entityId); }
 					});
 				}
@@ -151,7 +151,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 					Widgets.CheckboxLabeled(new Rect(viewRect.x + 240f, y, 140f, 28f), "RimAI.Common.AutoUpdate".Translate(), ref val);
 					if (val != (_autoEnabled ?? false)) { settings?.SetAutoBio(entityId, val); settings?.SetAutoIdeo(entityId, val); _autoEnabled = val; }
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				y += 34f;
 				for (int i = 0; i < _bioItems.Count; i++)
 				{
@@ -173,12 +173,12 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 						var body = string.IsNullOrWhiteSpace(it.Text) ? "RimAI.Common.Empty".Translate().ToString() : it.Text;
 						Widgets.Label(contentRect, body);
 						if (Widgets.ButtonText(new Rect(actionsRect.x, actionsRect.y, 90f, 28f), "RimAI.Common.Edit".Translate())) { it.IsEditing = true; it.EditText = it.Text; }
-						if (Widgets.ButtonText(new Rect(actionsRect.x + 100f, actionsRect.y, 90f, 28f), "RimAI.Common.Delete".Translate())) { try { biography.Remove(entityId, it.Id); } catch { } ReloadBiography(biography, entityId); }
+						if (Widgets.ButtonText(new Rect(actionsRect.x + 100f, actionsRect.y, 90f, 28f), "RimAI.Common.Delete".Translate())) { try { biography.Remove(entityId, it.Id); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } ReloadBiography(biography, entityId); }
 					}
 					else
 					{
 						it.EditText = Widgets.TextArea(contentRect, it.EditText ?? string.Empty);
-						if (Widgets.ButtonText(new Rect(actionsRect.x, actionsRect.y, 90f, 28f), "RimAI.Common.Save".Translate())) { try { biography.Upsert(entityId, new RimAI.Core.Source.Modules.Persona.BiographyItem { Id = it.Id, Text = it.EditText ?? string.Empty, Source = string.IsNullOrWhiteSpace(it.Source) ? "user" : it.Source }); } catch { } it.Text = it.EditText; it.IsEditing = false; ReloadBiography(biography, entityId); }
+						if (Widgets.ButtonText(new Rect(actionsRect.x, actionsRect.y, 90f, 28f), "RimAI.Common.Save".Translate())) { try { biography.Upsert(entityId, new RimAI.Core.Source.Modules.Persona.BiographyItem { Id = it.Id, Text = it.EditText ?? string.Empty, Source = string.IsNullOrWhiteSpace(it.Source) ? "user" : it.Source }); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } it.Text = it.EditText; it.IsEditing = false; ReloadBiography(biography, entityId); }
 						if (Widgets.ButtonText(new Rect(actionsRect.x + 100f, actionsRect.y, 90f, 28f), "RimAI.Common.Cancel".Translate())) { it.IsEditing = false; it.EditText = it.Text; }
 					}
 					y += rowH + 6f;
@@ -212,10 +212,10 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 						var s = await ideology.GenerateAsync(entityId);
 						s = s ?? new RimAI.Core.Source.Modules.Persona.IdeologySnapshot();
 						// 生成后自动保存
-						try { ideology.Set(entityId, s); } catch { }
+						try { ideology.Set(entityId, s); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 						_ideologyText = ComposeIdeologyText(s);
 					}
-					catch (Exception ex) { try { Verse.Log.Warning($"[RimAI.Core][P10] Ideology.Generate failed entity={entityId}: {ex.Message}"); } catch { } }
+					catch (Exception ex) { try { Verse.Log.Warning($"[RimAI.Core][P10] Ideology.Generate failed entity={entityId}: {ex.Message}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } }
 					finally { _ideoBusy = false; }
 				});
 			}
@@ -230,7 +230,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 						var s = new RimAI.Core.Source.Modules.Persona.IdeologySnapshot { Worldview = parts.w, Values = parts.v, CodeOfConduct = parts.c, TraitsText = parts.t, UpdatedAtUtc = DateTime.UtcNow };
 						ideology.Set(entityId, s);
 					}
-					catch (Exception ex) { try { Verse.Log.Warning($"[RimAI.Core][P10] Ideology.Save failed entity={entityId}: {ex.Message}"); } catch { } }
+					catch (Exception ex) { try { Verse.Log.Warning($"[RimAI.Core][P10] Ideology.Save failed entity={entityId}: {ex.Message}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } }
 					finally { _ideoBusy = false; }
 				});
 			}
@@ -252,7 +252,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 				Widgets.CheckboxLabeled(new Rect(rect.x + 300f, y, 140f, 28f), "RimAI.Common.AutoUpdate".Translate(), ref val);
 				if (val != (_autoEnabled ?? false)) { settings?.SetAutoBio(entityId, val); settings?.SetAutoIdeo(entityId, val); _autoEnabled = val; }
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			y += 34f;
 
 			// 文本区域（单一富文本框）

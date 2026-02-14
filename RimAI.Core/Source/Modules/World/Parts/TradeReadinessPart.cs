@@ -66,7 +66,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                     }
                 }
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
             // 通讯台可用性（任意一个可用）
             bool hasConsole = false, usableNow = false;
@@ -77,11 +77,11 @@ namespace RimAI.Core.Source.Modules.World.Parts
                     if (b is Building_CommsConsole cc)
                     {
                         hasConsole = true;
-                        try { if (cc.CanUseCommsNow) usableNow = true; } catch { }
+                        try { if (cc.CanUseCommsNow) usableNow = true; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                     }
                 }
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
             // 可交易物资（信标覆盖范围；去重按 def 合并数量和值）
             var goods = new List<TradeGoodsItem>();
@@ -109,7 +109,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                 }
                 goods = goods.OrderByDescending(x => x.TotalValue).ThenByDescending(x => x.Qty).ToList();
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
             return new TradeReadinessSnapshot
             {

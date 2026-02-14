@@ -57,7 +57,7 @@ namespace RimAI.Core.Source.Modules.Tooling
 				// 若同名已存在，后者覆盖前者（记录日志）
 				if (execMap.ContainsKey(e.Name))
 				{
-					try { Verse.Log.Warning($"[RimAI.Core] Duplicate executor discovered for '{e.Name}', latter overrides former."); } catch { }
+					try { Verse.Log.Warning($"[RimAI.Core] Duplicate executor discovered for '{e.Name}', latter overrides former."); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				}
 				execMap[e.Name] = e;
 			}
@@ -107,7 +107,7 @@ namespace RimAI.Core.Source.Modules.Tooling
 					Verse.Log.Warning($"[RimAI.Core] Missing executors for tools: {string.Join(", ", missing)}");
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			// 读取内部配置（构造函数注入，禁止 Service Locator）
 			_cfgService = configurationService as ConfigurationService;
 			_loc = localization;
@@ -146,7 +146,7 @@ namespace RimAI.Core.Source.Modules.Tooling
 							_ = RebuildIndexAsync();
 						}
 					}
-					catch { }
+					catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				};
 			}
 		}

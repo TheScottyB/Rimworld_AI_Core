@@ -19,7 +19,7 @@ namespace RimAI.Core.Source.Modules.Tooling.Execution
 			var cz = Convert.ToInt32(vz, CultureInfo.InvariantCulture);
 			var r = Convert.ToInt32(vr, CultureInfo.InvariantCulture);
 			IWorldDataService world = null;
-			try { world = (IWorldDataService)RimAI.Core.Source.Boot.RimAICoreMod.Container.Resolve(typeof(IWorldDataService)); } catch { }
+			try { world = (IWorldDataService)RimAI.Core.Source.Boot.RimAICoreMod.Container.Resolve(typeof(IWorldDataService)); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			if (world == null) return Task.FromResult<object>(new { ok = false });
 			return world.GetTerrainCountsAsync(cx, cz, r, ct).ContinueWith<Task<object>>(t =>
 			{

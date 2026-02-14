@@ -64,15 +64,15 @@ namespace RimAI.Core.Source.Modules.Persona
 						if (!allowBio && !allowIdeo) { continue; }
 					}
 					// 统一在本轮中依次执行两项（失败互不影响）
-					if (!ct.IsCancellationRequested) { try { await TryGenerateBiographyAsync(entityId, ct).ConfigureAwait(false); } catch { } }
-					if (!ct.IsCancellationRequested) { try { await TryGenerateIdeologyAsync(entityId, ct).ConfigureAwait(false); } catch { } }
+					if (!ct.IsCancellationRequested) { try { await TryGenerateBiographyAsync(entityId, ct).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } }
+					if (!ct.IsCancellationRequested) { try { await TryGenerateIdeologyAsync(entityId, ct).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } }
 					// 间隔配置的毫秒数再处理下一个（真实时间）
 					var delayMs = Math.Max(0, _settings?.GetPerPawnDelayMs() ?? 60000);
-					try { await Task.Delay(delayMs, ct).ConfigureAwait(false); } catch { }
+					try { await Task.Delay(delayMs, ct).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				}
 				if (_settings != null) _settings.SetLastRunDay(day);
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 
@@ -87,12 +87,12 @@ namespace RimAI.Core.Source.Modules.Persona
 					var drafts = await _bio.GenerateDraftAsync(entityId, ct).ConfigureAwait(false);
 					if (drafts != null && drafts.Count > 0)
 					{
-						foreach (var d in drafts) { try { _bio.Upsert(entityId, d); } catch { } }
+						foreach (var d in drafts) { try { _bio.Upsert(entityId, d); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } }
 						return true;
 					}
 				}
 				catch (OperationCanceledException) { return false; }
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
 			return false;
 		}
@@ -112,16 +112,16 @@ namespace RimAI.Core.Source.Modules.Persona
 					}
 				}
 				catch (OperationCanceledException) { return false; }
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
 			return false;
 		}
 
 		public void Dispose()
 		{
-			try { _cts.Cancel(); } catch { }
-			try { _periodic?.Dispose(); } catch { }
-			try { _cts.Dispose(); } catch { }
+			try { _cts.Cancel(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+			try { _periodic?.Dispose(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+			try { _cts.Dispose(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 	}
 }

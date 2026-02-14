@@ -58,7 +58,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         if (b == null || b.Destroyed) continue;
                         // 判定炮塔
                         bool isTurret = false;
-                        try { isTurret = b.def?.building?.IsTurret == true; } catch { }
+                        try { isTurret = b.def?.building?.IsTurret == true; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                         if (!isTurret && b is Building_Turret) isTurret = true;
                         if (!isTurret)
                         {
@@ -69,8 +69,8 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         {
                             float range = 25f, minRange = 0f; bool los = true, overhead = false; float dps = 0f;
                             bool manned = false, holdFire = false, powered = true;
-                            try { var p = b.TryGetComp<CompPowerTrader>(); if (p != null) powered = p.PowerOn; } catch { }
-                            try { var mann = b.TryGetComp<CompMannable>(); if (mann != null) manned = mann.MannedNow; } catch { }
+                            try { var p = b.TryGetComp<CompPowerTrader>(); if (p != null) powered = p.PowerOn; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                            try { var mann = b.TryGetComp<CompMannable>(); if (mann != null) manned = mann.MannedNow; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                             try
                             {
                                 if (b is Building_TurretGun tg)
@@ -82,9 +82,9 @@ namespace RimAI.Core.Source.Modules.World.Parts
                                         range = vp.range;
                                         minRange = vp.minRange;
                                         los = vp.requireLineOfSight;
-                                        try { overhead = vp.defaultProjectile?.projectile?.flyOverhead ?? false; } catch { }
+                                        try { overhead = vp.defaultProjectile?.projectile?.flyOverhead ?? false; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                                         float dmg = 0f; int burst = Math.Max(1, vp.burstShotCount);
-                                        try { dmg = vp.defaultProjectile?.projectile?.GetDamageAmount(null, null) ?? 0f; } catch { }
+                                        try { dmg = vp.defaultProjectile?.projectile?.GetDamageAmount(null, null) ?? 0f; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                                         float warm = Math.Max(0.1f, vp.warmupTime);
                                         float cool = Math.Max(0.1f, vp.defaultCooldownTime);
                                         dps = (dmg * burst) / (warm + cool);
@@ -100,10 +100,10 @@ namespace RimAI.Core.Source.Modules.World.Parts
                                             if (fi != null && fi.FieldType == typeof(bool)) holdFire = (bool)(fi.GetValue(tg) ?? false);
                                         }
                                     }
-                                    catch { }
+                                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                                 }
                             }
-                            catch { }
+                            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                             turrets.Add(new SecurityTurretItem
                             {
@@ -131,7 +131,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         if (isTrap)
                         {
                             bool resettable = true;
-                            try { resettable = b.GetComps<ThingComp>().Any(c => c.GetType().Name.Contains("Rearm", StringComparison.OrdinalIgnoreCase)); } catch { }
+                            try { resettable = b.GetComps<ThingComp>().Any(c => c.GetType().Name.Contains("Rearm", StringComparison.OrdinalIgnoreCase)); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                             traps.Add(new SecurityTrapItem
                             {
                                 Type = b.def?.defName ?? b.GetType().Name,
@@ -142,7 +142,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                             });
                         }
                     }
-                    catch { }
+                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 }
 
                 // 在炮塔周边补充稀疏采样（玩家常在领地内布置防线）
@@ -177,7 +177,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                             stack++;
                             if (t.FlyOverhead) overheadAny = true;
                         }
-                        catch { }
+                        catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                     }
                     if (stack > 0) coverCounts[cell] = stack;
                     if (overheadAny) overheadCovered.Add(cell);
@@ -221,9 +221,9 @@ namespace RimAI.Core.Source.Modules.World.Parts
 
         private static string SafeLabel(Thing t)
         {
-            try { var s = t.LabelCap.ToString(); if (!string.IsNullOrWhiteSpace(s)) return s; } catch { }
-            try { var s2 = t.Label; if (!string.IsNullOrWhiteSpace(s2)) return s2; } catch { }
-            try { return t.def?.label ?? t.def?.defName ?? t.GetType().Name; } catch { }
+            try { var s = t.LabelCap.ToString(); if (!string.IsNullOrWhiteSpace(s)) return s; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+            try { var s2 = t.Label; if (!string.IsNullOrWhiteSpace(s2)) return s2; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+            try { return t.def?.label ?? t.def?.defName ?? t.GetType().Name; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             return t?.GetType().Name ?? string.Empty;
         }
 
@@ -239,7 +239,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                     return set;
                 }
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
             // 回退：以殖民者建筑为核心扩张一定半径
             try
@@ -254,7 +254,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                     foreach (var c in rect.Cells) set.Add(c);
                 }
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             return set;
         }
 
@@ -474,7 +474,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         FlyOverhead = t.FlyOverhead
                     });
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             }
             return list;
         }

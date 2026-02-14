@@ -24,7 +24,7 @@ namespace RimAI.Core.Source.Modules.Prompting.Composers.ChatUI
 					blocks.Add(new ContextBlock { Title = title, Text = job });
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			return new ComposerOutput { SystemLines = System.Array.Empty<string>(), ContextBlocks = blocks };
 		}
 	}

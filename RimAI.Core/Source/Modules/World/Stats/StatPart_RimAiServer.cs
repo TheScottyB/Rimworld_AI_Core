@@ -31,7 +31,7 @@ namespace RimAI.Core.Source.Modules.World.Stats
                     val *= 1f + (rndPct / 100f);
                 }
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
         }
 
         public override string ExplanationPart(StatRequest req)

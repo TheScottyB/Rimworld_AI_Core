@@ -100,8 +100,8 @@ namespace RimAI.Core.Source.Infrastructure.Scheduler
 			public bool FirstInitialized;
 			public void Dispose()
 			{
-				try { LinkedCts?.Cancel(); } catch { }
-				try { LinkedCts?.Dispose(); } catch { }
+				try { LinkedCts?.Cancel(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+				try { LinkedCts?.Dispose(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
 		}
 

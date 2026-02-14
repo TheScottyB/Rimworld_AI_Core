@@ -39,7 +39,7 @@ namespace RimAI.Core.Source.Versioned._1_6.World
 						}
 					}
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				// 2) 回退到字段/属性（带性别优先）
 				try
 				{
@@ -76,7 +76,7 @@ namespace RimAI.Core.Source.Versioned._1_6.World
 						if (!string.IsNullOrWhiteSpace(s)) return s.CapitalizeFirst();
 					}
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				// 3) 兜底：defName
 				return bs.defName;
 			}
@@ -99,7 +99,7 @@ namespace RimAI.Core.Source.Versioned._1_6.World
 						if (!string.IsNullOrWhiteSpace(label)) return label;
 					}
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				// Story 自带 TitleShortCap
 				try
 				{
@@ -114,7 +114,7 @@ namespace RimAI.Core.Source.Versioned._1_6.World
 						}
 					}
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				// 回退：成年/童年 Backstory 标题
 				var t = GetBackstoryTitle(pawn, false) ?? GetBackstoryTitle(pawn, true);
 				return t;
@@ -152,7 +152,7 @@ namespace RimAI.Core.Source.Versioned._1_6.World
 								}
 							}
 						}
-						catch { }
+						catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					}
 				}
 				var names = DefDatabase<WorkTypeDef>.AllDefs
@@ -181,7 +181,7 @@ namespace RimAI.Core.Source.Versioned._1_6.World
 						{
 							other = inter.GetConcerns()?.OfType<Pawn>()?.FirstOrDefault(x => x != pawn);
 						}
-						catch { }
+						catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 						var item = new RimAI.Core.Source.Modules.World.SocialEventItem
 						{
 							TimestampUtc = DateTime.UtcNow,
@@ -195,7 +195,7 @@ namespace RimAI.Core.Source.Versioned._1_6.World
 					}
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			return list;
 		}
 

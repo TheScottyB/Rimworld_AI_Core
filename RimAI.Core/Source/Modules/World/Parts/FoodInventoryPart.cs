@@ -40,9 +40,9 @@ namespace RimAI.Core.Source.Modules.World.Parts
 					var def = kv.Key; var count = kv.Value;
 					if (def == null || count <= 0) continue;
 					if (!(def.IsNutritionGivingIngestible && def.ingestible?.HumanEdible == true)) continue;
-					float nutPer = 0f; try { nutPer = def.GetStatValueAbstract(StatDefOf.Nutrition); } catch { }
+					float nutPer = 0f; try { nutPer = def.GetStatValueAbstract(StatDefOf.Nutrition); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					var sum = nutPer * count; total += sum;
-					string pref = string.Empty; try { pref = def.ingestible?.preferability.ToString(); } catch { }
+					string pref = string.Empty; try { pref = def.ingestible?.preferability.ToString(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					items.Add(new FoodItemInfo { DefName = def.defName, Label = def.label ?? def.defName, Count = count, NutritionPer = nutPer, TotalNutrition = sum, Preferability = pref });
 				}
 				items = items.OrderByDescending(i => i.TotalNutrition).ToList();

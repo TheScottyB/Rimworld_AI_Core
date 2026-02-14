@@ -73,7 +73,7 @@ namespace RimAI.Core.Source.Modules.Stage.Acts
 			}
 			// 统一 locale：请求 → 默认语言 → en
 			var useLocale = req?.Locale ?? _loc?.GetDefaultLocale() ?? "en";
-			try { Verse.Log.Message($"[RimAI.Core][P9] InterServerGroupChat begin conv={conv} servers={servers?.Count ?? 0} locale={useLocale}"); } catch { }
+			try { Verse.Log.Message($"[RimAI.Core][P9] InterServerGroupChat begin conv={conv} servers={servers?.Count ?? 0} locale={useLocale}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			if (servers.Count < 2)
 			{
 				var msg = "RimAI.Stage.ServerChat.TooFewServers".Translate().ToString();
@@ -100,7 +100,7 @@ namespace RimAI.Core.Source.Modules.Stage.Acts
 									var worldAction = RimAI.Core.Source.Boot.RimAICoreMod.Container.Resolve<RimAI.Core.Source.Modules.World.IWorldActionService>();
 									await worldAction.ShowThingSpeechTextAsync(thingId, item.content, token).ConfigureAwait(false);
 								}
-								catch { }
+								catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 							}
 							try { await Task.Delay(1500, token).ConfigureAwait(false); } catch { break; }
 						}
@@ -116,10 +116,10 @@ namespace RimAI.Core.Source.Modules.Stage.Acts
 				foreach (var m in playMsgs.OrderBy(_ => rndLocal.Next()))
 				{
 					outQueueLocal.Enqueue((m.speaker, m.content, false));
-					try { if (_history != null) await _history.AppendRecordAsync(conv, $"Stage:{Name}", m.speaker, "chat", m.content, advanceTurn: false, ct: token).ConfigureAwait(false); } catch { }
+					try { if (_history != null) await _history.AppendRecordAsync(conv, $"Stage:{Name}", m.speaker, "chat", m.content, advanceTurn: false, ct: token).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				}
 				outQueueLocal.Enqueue((null, null, true));
-				try { await consumeTaskLocal.ConfigureAwait(false); } catch { }
+				try { await consumeTaskLocal.ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
 
 			// Step 1: 随机选择“发起人”服务器，仅基于其槽位扫描工具列表（确保工具列表随机化随发起人变化）
@@ -147,7 +147,7 @@ namespace RimAI.Core.Source.Modules.Stage.Acts
 				var registered = _tooling.GetRegisteredToolNames() ?? Array.Empty<string>();
 				loadedTools.IntersectWith(registered);
 			}
-			catch (Exception ex) { try { await _history.AppendRecordAsync(conv, $"Stage:{Name}", "agent:stage", "log", $"toolRegistryError:{ex.GetType().Name}", false, ct).ConfigureAwait(false); } catch { } }
+			catch (Exception ex) { try { await _history.AppendRecordAsync(conv, $"Stage:{Name}", "agent:stage", "log", $"toolRegistryError:{ex.GetType().Name}", false, ct).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } }
 			if (loadedTools.Count == 0)
 			{
 				// Fallback：无工具可用时，生成一个随机关联话题（本地化），并以黑色幽默风格讨论
@@ -294,16 +294,16 @@ namespace RimAI.Core.Source.Modules.Stage.Acts
 							if (args == null) args = new Dictionary<string, object>();
 							args["server_level"] = Math.Max(1, Math.Min(3, maxLevel));
 						}
-						catch { }
+						catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 						var result = await _tooling.ExecuteToolAsync(tool, args, ct).ConfigureAwait(false);
 						topicJson = JsonConvert.SerializeObject(result);
 						topicTitle = _tooling.GetToolDisplayNameOrNull(tool) ?? tool;
 						break;
 					}
-					catch { }
+					catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				}
 			}
-			catch (Exception ex) { try { await _history.AppendRecordAsync(conv, $"Stage:{Name}", "agent:stage", "log", $"toolPickError:{ex.GetType().Name}", false, ct).ConfigureAwait(false); } catch { } }
+			catch (Exception ex) { try { await _history.AppendRecordAsync(conv, $"Stage:{Name}", "agent:stage", "log", $"toolPickError:{ex.GetType().Name}", false, ct).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } }
 			if (string.IsNullOrWhiteSpace(topicJson))
 			{
 				// 工具执行未产出时，也回退到随机关联话题
@@ -473,7 +473,7 @@ namespace RimAI.Core.Source.Modules.Stage.Acts
 					}
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			return list;
 		}
 

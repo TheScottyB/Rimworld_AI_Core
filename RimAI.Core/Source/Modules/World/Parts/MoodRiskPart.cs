@@ -80,7 +80,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                             causeImpact[label] = tup;
                         }
                     }
-                    catch { }
+                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 }
 
                 float avg = nValid > 0 ? (sumMood / nValid) : 0f;
@@ -104,8 +104,8 @@ namespace RimAI.Core.Source.Modules.World.Parts
 
         private static string SafeThoughtLabel(Thought t)
         {
-            try { var s = t.LabelCap.ToString(); if (!string.IsNullOrWhiteSpace(s)) return s; } catch { }
-            try { return t.def?.label ?? t.def?.defName; } catch { }
+            try { var s = t.LabelCap.ToString(); if (!string.IsNullOrWhiteSpace(s)) return s; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+            try { return t.def?.label ?? t.def?.defName; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             return null;
         }
     }

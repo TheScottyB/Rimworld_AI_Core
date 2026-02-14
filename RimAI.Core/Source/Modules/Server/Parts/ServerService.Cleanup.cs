@@ -14,14 +14,14 @@ namespace RimAI.Core.Source.Modules.Server
 		{
 			if (string.IsNullOrWhiteSpace(entityId)) return;
 			// 1) 停止周期巡检任务
-			if (_periodics.TryRemove(entityId, out var disp)) { try { disp.Dispose(); } catch { } }
+			if (_periodics.TryRemove(entityId, out var disp)) { try { disp.Dispose(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } }
 			// 2) 构造巡检会话键
 			var convKey = BuildServerInspectionConvKey(entityId);
 			// 3) 清空槽位并移除记录
 			if (_servers.TryRemove(entityId, out var s) && s != null)
 			{
-				try { s.InspectionSlots?.Clear(); } catch { }
-				try { s.ServerPersonaSlots?.Clear(); } catch { }
+				try { s.InspectionSlots?.Clear(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+				try { s.ServerPersonaSlots?.Clear(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
 			// 4) 可选：清空巡检会话历史与对应 Recap，避免残留继续触发 UI
 			if (clearInspectionHistory)
@@ -33,10 +33,10 @@ namespace RimAI.Core.Source.Modules.Server
 						var recap = RimAI.Core.Source.Boot.RimAICoreMod.Container.Resolve<IRecapService>();
 						var got = recap?.GetRecaps(convKey);
 						var items = got ?? new List<RecapItem>();
-						foreach (var r in items) { try { recap.DeleteRecap(convKey, r.Id); } catch { } }
-					} catch { }
+						foreach (var r in items) { try { recap.DeleteRecap(convKey, r.Id); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } }
+					} catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
 
 			// 5) 额外清理：仅删除该服务器与玩家的严格 1v1 聊天线程（仅 server:<id>/thing:<id> 与 player:* 两个参与者）
@@ -66,7 +66,7 @@ namespace RimAI.Core.Source.Modules.Server
 								isStrict1v1 = hasServer && hasPlayer;
 							}
 						}
-						catch { }
+						catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 						if (isStrict1v1)
 						{
 							try
@@ -76,15 +76,15 @@ namespace RimAI.Core.Source.Modules.Server
 									var recap = RimAI.Core.Source.Boot.RimAICoreMod.Container.Resolve<IRecapService>();
 									var got = recap?.GetRecaps(ck);
 									var items = got ?? new List<RecapItem>();
-									foreach (var r in items) { try { recap.DeleteRecap(ck, r.Id); } catch { } }
-								} catch { }
+									foreach (var r in items) { try { recap.DeleteRecap(ck, r.Id); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } }
+								} catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 							}
-							catch { }
+							catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 						}
 					}
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 	}
 }

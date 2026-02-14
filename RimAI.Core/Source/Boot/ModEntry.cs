@@ -72,7 +72,7 @@ namespace RimAI.Core.Source.Boot
                 Container.Register<IPersonaTemplateManager, PersonaTemplateManager>();
                 Container.Register<IPersonaAutoSettingsService, PersonaAutoSettingsService>();
                 // 自动生成后台任务（P7）：每 15 天为殖民者尝试生成传记与世界观（顺序执行，1分钟间隔）
-                try { Container.RegisterInstance(new PersonaAutoGenerator(Container.Resolve<RimAI.Core.Source.Infrastructure.Scheduler.ISchedulerService>(), Container.Resolve<RimAI.Core.Source.Modules.World.IWorldDataService>(), Container.Resolve<RimAI.Core.Source.Modules.Persona.Biography.IBiographyService>(), Container.Resolve<RimAI.Core.Source.Modules.Persona.Ideology.IIdeologyService>(), Container.Resolve<IPersonaAutoSettingsService>())); } catch { }
+                try { Container.RegisterInstance(new PersonaAutoGenerator(Container.Resolve<RimAI.Core.Source.Infrastructure.Scheduler.ISchedulerService>(), Container.Resolve<RimAI.Core.Source.Modules.World.IWorldDataService>(), Container.Resolve<RimAI.Core.Source.Modules.Persona.Biography.IBiographyService>(), Container.Resolve<RimAI.Core.Source.Modules.Persona.Ideology.IIdeologyService>(), Container.Resolve<IPersonaAutoSettingsService>())); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                 // Register P8 History services (Recap depends on History, so register History first, but Recap requires history in ctor and history no longer depends on recap)
                 Container.Register<IHistoryService, HistoryService>();
@@ -127,7 +127,7 @@ namespace RimAI.Core.Source.Boot
                         stage.RegisterTrigger(new RimAI.Core.Source.Modules.Stage.Triggers.ManualInterServerTrigger(stage, Container.Resolve<RimAI.Core.Source.Modules.Stage.Diagnostics.IStageLogging>()));
                     }
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                 // P13: Server 周期任务发现与注册改由 SchedulerGameComponent 在 tick=2500 触发（避免加载早期世界数据未就绪导致的超时/取消）
 
@@ -139,7 +139,7 @@ namespace RimAI.Core.Source.Boot
                 // P2: resolve ILLMService to self-check readiness
                 _ = Container.Resolve<ILLMService>();
                 // P4: ensure tooling index attempt load (non-blocking)
-                try { _ = Container.Resolve<RimAI.Core.Source.Modules.Tooling.IToolRegistryService>(); } catch { }
+                try { _ = Container.Resolve<RimAI.Core.Source.Modules.Tooling.IToolRegistryService>(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 try
                 {
                     var toolingSvc = Container.Resolve<RimAI.Core.Source.Modules.Tooling.IToolRegistryService>();
@@ -178,13 +178,13 @@ namespace RimAI.Core.Source.Boot
                                 loc?.SetDefaultLocale(normalized);
                             }
                         }
-                        try { var _ = loc?.GetAvailableLocales(); } catch { }
+                        try { var _ = loc?.GetAvailableLocales(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                         // 全局预热：确保称谓在配置层初始化一次，后续 UI 不直接触达本地化
-                        try { cfg?.EnsurePlayerTitleInitialized(loc); } catch { }
+                        try { cfg?.EnsurePlayerTitleInitialized(loc); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                     }
-                    catch { }
+                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             }
             catch (Exception ex)
             {
@@ -202,7 +202,7 @@ namespace RimAI.Core.Source.Boot
 
         public override void DoSettingsWindowContents(UnityEngine.Rect inRect)
         {
-            try { _settingsWindow?.DoWindowContents(inRect); } catch { }
+            try { _settingsWindow?.DoWindowContents(inRect); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
         }
 
         public static T TryGetService<T>() where T : class

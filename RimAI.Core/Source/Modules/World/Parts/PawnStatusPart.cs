@@ -55,11 +55,11 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         int maxHp = a.MaxHitPoints > 0 ? a.MaxHitPoints : 0;
                         int curHp = a.HitPoints;
                         int dp = maxHp > 0 ? Mathf.Clamp(Mathf.RoundToInt(curHp * 100f / maxHp), 0, 100) : 100;
-                        string qual = string.Empty; try { if (QualityUtility.TryGetQuality(a, out var q)) qual = q.ToString(); } catch { }
+                        string qual = string.Empty; try { if (QualityUtility.TryGetQuality(a, out var q)) qual = q.ToString(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                         result.Add(new ApparelItem { Label = a.LabelCap ?? a.Label, Quality = qual, DurabilityPercent = dp });
                     }
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 return (System.Collections.Generic.IReadOnlyList<ApparelItem>)result;
             }, name: "GetApparel", ct: cts.Token);
         }
@@ -75,12 +75,12 @@ namespace RimAI.Core.Source.Modules.World.Parts
                 Pawn pawn = null; foreach (var map in Find.Maps) { foreach (var p in map.mapPawns?.AllPawns ?? System.Linq.Enumerable.Empty<Pawn>()) { if (p?.thingIDNumber == pawnLoadId) { pawn = p; break; } } if (pawn != null) break; }
                 if (pawn == null) throw new WorldDataException($"Pawn not found: {pawnLoadId}");
                 var needs = new NeedsSnapshot();
-                try { needs.Food = pawn.needs?.food?.CurLevelPercentage ?? 0f; } catch { }
-                try { needs.Rest = pawn.needs?.rest?.CurLevelPercentage ?? 0f; } catch { }
-                try { needs.Recreation = pawn.needs?.joy?.CurLevelPercentage ?? 0f; } catch { }
-                try { needs.Beauty = pawn.needs?.beauty?.CurLevelPercentage ?? 0f; } catch { }
-                try { needs.Indoors = pawn.needs?.roomsize?.CurLevelPercentage ?? 0f; } catch { }
-                try { needs.Mood = pawn.needs?.mood?.CurLevelPercentage ?? 0f; } catch { }
+                try { needs.Food = pawn.needs?.food?.CurLevelPercentage ?? 0f; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                try { needs.Rest = pawn.needs?.rest?.CurLevelPercentage ?? 0f; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                try { needs.Recreation = pawn.needs?.joy?.CurLevelPercentage ?? 0f; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                try { needs.Beauty = pawn.needs?.beauty?.CurLevelPercentage ?? 0f; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                try { needs.Indoors = pawn.needs?.roomsize?.CurLevelPercentage ?? 0f; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                try { needs.Mood = pawn.needs?.mood?.CurLevelPercentage ?? 0f; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 return needs;
             }, name: "GetNeeds", ct: cts.Token);
         }
@@ -107,7 +107,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         .ToList();
                     thoughts.AddRange(top);
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 return (System.Collections.Generic.IReadOnlyList<ThoughtItem>)thoughts;
             }, name: "GetMoodThoughtOffsets", ct: cts.Token);
         }

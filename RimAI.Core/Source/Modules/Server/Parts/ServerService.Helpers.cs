@@ -70,7 +70,7 @@ namespace RimAI.Core.Source.Modules.Server
 					if (int.TryParse(numStr, out var id3)) return id3;
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			return null;
 		}
 

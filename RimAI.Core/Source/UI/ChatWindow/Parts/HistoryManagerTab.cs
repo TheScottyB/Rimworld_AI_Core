@@ -117,7 +117,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 									if (!string.IsNullOrEmpty(r.Id)) hideIds.Add(r.Id);
 								}
 							}
-							catch { }
+							catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 						}
 						if (hideIds.Count > 0 && _entries != null)
 						{
@@ -125,7 +125,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 						}
 					}
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				// 同步加载原始 JSON 以提取每条记录的 speaker（用于群聊时逐条显示正确人物名）
 				try
 				{
@@ -142,11 +142,11 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 								var sp = jo.Value<string>("speaker") ?? string.Empty;
 								if (!string.IsNullOrWhiteSpace(r.Id) && !_entrySpeakerById.ContainsKey(r.Id)) _entrySpeakerById[r.Id] = sp ?? string.Empty;
 							}
-							catch { }
+							catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 						}
 					}
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				// 异步解析本会话中出现的各个 pawn: 的显示名
 				BeginResolveSpeakerNamesForConv(history, convKey);
 			}
@@ -196,7 +196,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 			if (Widgets.ButtonText(clearBtnRect, "RimAI.Common.Clear".Translate()))
 			{
 				try { var ok = history.ClearThreadAsync(convKey).GetAwaiter().GetResult(); if (ok) { ReloadHistory(history, convKey); } }
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
 			GUI.color = prev;
 			y += 34f;
@@ -379,7 +379,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 					_ = System.Threading.Tasks.Task.Run(async () =>
 					{
 						try { await recap.GenerateManualAsync(convKey); }
-						catch (Exception ex) { try { Verse.Log.Warning($"[RimAI.Core][UI] Manual recap failed conv={convKey}: {ex.Message}"); } catch { } }
+						catch (Exception ex) { try { Verse.Log.Warning($"[RimAI.Core][UI] Manual recap failed conv={convKey}: {ex.Message}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } }
 						finally { _recapGenerating = false; ReloadRecaps(recap, convKey); }
 					});
 				}
@@ -434,7 +434,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 				_recapHandler = (ck, id) => { if (string.Equals(ck, _recapHookedConvKey, StringComparison.Ordinal)) _recapDirty = true; };
 				_recapHooked.OnRecapUpdated += _recapHandler;
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		private void TryUnhookRecapEvent()
@@ -446,7 +446,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 					_recapHooked.OnRecapUpdated -= _recapHandler;
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			finally
 			{
 				_recapHooked = null;
@@ -464,17 +464,17 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 			if (_relatedConvs != null) return;
 			_relatedConvs = new List<string>();
 			string pawnKey = null;
-			try { if (participantIds != null) { foreach (var id in participantIds) { if (id != null && id.StartsWith("pawn:")) { pawnKey = id; break; } } } } catch { }
+			try { if (participantIds != null) { foreach (var id in participantIds) { if (id != null && id.StartsWith("pawn:")) { pawnKey = id; break; } } } } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			if (string.IsNullOrEmpty(pawnKey)) return;
 			try
 			{
 				var all = history.GetAllConvKeys();
 				foreach (var ck in all)
 				{
-					try { var parts = history.GetParticipantsOrEmpty(ck); if (parts != null) { foreach (var p in parts) { if (string.Equals(p, pawnKey, StringComparison.Ordinal)) { _relatedConvs.Add(ck); break; } } } } catch { }
+					try { var parts = history.GetParticipantsOrEmpty(ck); if (parts != null) { foreach (var p in parts) { if (string.Equals(p, pawnKey, StringComparison.Ordinal)) { _relatedConvs.Add(ck); break; } } } } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			BeginResolveRelatedLabels(history);
 		}
 
@@ -514,7 +514,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 							}
 							label = names.Count > 0 ? string.Join(", ", names) : ck;
 						}
-						catch { }
+						catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 						_relatedConvLabels[i] = label;
 					}
 				}
@@ -567,7 +567,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 						}
 					}
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
 			GUI.color = prevColor;
 			y += 34f;
@@ -619,11 +619,11 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 								var sp = jo.Value<string>("speaker") ?? string.Empty;
 								if (!string.IsNullOrWhiteSpace(r.Id)) _entrySpeakerById[r.Id] = sp ?? string.Empty;
 							}
-							catch { }
+							catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 						}
 					}
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				// 启动一次该会话的显示名解析（玩家称谓/小人名）
 				BeginResolveSpeakerNamesForConv(history, convKey);
 				// 在内联区域完整实现与 Thread 相同的“编辑/保存/删除”行为（直接操作 target convKey）
@@ -684,7 +684,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 				}
 				Widgets.EndScrollView();
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		private void DrawRawJson(Rect rect, IHistoryService history, string convKey)
@@ -753,13 +753,13 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 									if (int.TryParse(s, out var id))
 									{
 										try { var snap = await world.GetPawnPromptSnapshotAsync(id); var nm = snap?.Id?.Name; if (!string.IsNullOrWhiteSpace(nm)) pawnName = nm; }
-										catch { }
+										catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 									}
 									break;
 								}
 							}
 						}
-						catch { }
+						catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 						lock (_convUserName)
 						{
 							_convUserName[convKey] = playerTitle;
@@ -820,7 +820,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 					});
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		private string ResolveDisplayNameForEntry(string entryId, string defaultAiName)
@@ -836,7 +836,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 					}
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			return defaultAiName;
 		}
 

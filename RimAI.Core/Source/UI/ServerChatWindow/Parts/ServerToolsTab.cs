@@ -106,7 +106,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow.Parts
                     }
                 }
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
             // Controls: interval on first line; enable toggle on next line
             DrawControlsLine(ctlRect, state, server, entityId);
@@ -164,7 +164,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow.Parts
             if (newVal != prev)
             {
                 state.IntervalHours = newVal;
-                try { server?.SetInspectionIntervalHours(entityId, newVal); } catch { }
+                try { server?.SetInspectionIntervalHours(entityId, newVal); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             }
         }
 
@@ -177,7 +177,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow.Parts
             if (en != state.Enabled)
             {
                 state.Enabled = en;
-                try { server?.SetInspectionEnabled(entityId, en); } catch { }
+                try { server?.SetInspectionEnabled(entityId, en); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             }
         }
 
@@ -187,15 +187,15 @@ namespace RimAI.Core.Source.UI.ServerChatWindow.Parts
             Widgets.Label(labelRect, string.Format("RimAI.SCW.Tools.SlotLabel".Translate(), index + 1));
             var btnRect = new Rect(labelRect.xMax + 6f, row.y + 2f, Mathf.Min(360f, row.width - (labelRect.width + 12f)), 26f);
             string currentName = null;
-            try { currentName = (index >= 0 && index < state.SelectedTools.Count) ? state.SelectedTools[index] : null; } catch { }
+            try { currentName = (index >= 0 && index < state.SelectedTools.Count) ? state.SelectedTools[index] : null; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             string currentDisplay = string.IsNullOrWhiteSpace(currentName) ? "RimAI.SCW.Tools.NotLoaded".Translate() : GetLocalizedToolDisplay(tooling, currentName);
             if (Widgets.ButtonText(btnRect, currentDisplay))
             {
                 var menu = new List<FloatMenuOption>();
                 menu.Add(new FloatMenuOption("RimAI.SCW.Tools.NotLoaded".Translate(), () =>
                 {
-                    try { server?.RemoveSlot(entityId, index); } catch { }
-                    try { if (index >= 0 && index < state.SelectedTools.Count) state.SelectedTools[index] = null; } catch { }
+                    try { server?.RemoveSlot(entityId, index); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                    try { if (index >= 0 && index < state.SelectedTools.Count) state.SelectedTools[index] = null; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 }));
                 // 使用缓存的工具列表/等级映射，避免 UI 线程阻塞
                 var cachedList = state.AvailableToolsJson;
@@ -237,7 +237,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow.Parts
                             }
                         }
                     }
-                    catch { }
+                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                     foreach (var it in items)
                     {
@@ -266,8 +266,8 @@ namespace RimAI.Core.Source.UI.ServerChatWindow.Parts
                                 }
                                 catch { return; }
                             }
-                            try { server?.AssignSlot(entityId, index, it.name); } catch { }
-                            try { if (index >= 0 && index < state.SelectedTools.Count) state.SelectedTools[index] = it.name; } catch { }
+                            try { server?.AssignSlot(entityId, index, it.name); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                            try { if (index >= 0 && index < state.SelectedTools.Count) state.SelectedTools[index] = it.name; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                         }));
                     }
                 }
@@ -342,7 +342,7 @@ namespace RimAI.Core.Source.UI.ServerChatWindow.Parts
                     state.AvailableToolsJson = list;
                     state.LevelMap = map;
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 finally { state.IsLoadingTools = false; }
             });
         }

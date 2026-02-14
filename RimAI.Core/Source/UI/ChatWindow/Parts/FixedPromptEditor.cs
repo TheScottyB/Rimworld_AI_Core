@@ -49,7 +49,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 			if (Widgets.ButtonText(rSave, "RimAI.Common.Save".Translate()))
 			{
 				try { _persona?.Upsert(_entityId, e => e.SetFixedPrompt(_text ?? string.Empty)); }
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				Close();
 			}
 			if (Widgets.ButtonText(rClear, "RimAI.Common.Clear".Translate()))

@@ -70,12 +70,12 @@ namespace RimAI.Core.Source.Modules.World.Parts
                             else if (hdf.def?.injuryProps != null) cat = "Injury";
                             else if (hdf.def?.isBad == true) cat = "Disease";
                         }
-                        catch { }
+                        catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                         list.Add(new HediffItem { Label = label, Part = part, Severity = sev, Permanent = perm, Category = cat });
                     }
                     snap.Hediffs = list;
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 return snap;
             }, name: "GetPawnHealthSnapshot", ct: cts.Token);
         }

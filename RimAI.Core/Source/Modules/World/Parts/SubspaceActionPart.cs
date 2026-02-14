@@ -118,7 +118,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                                         if (lb.IndexOf("Revenant", StringComparison.OrdinalIgnoreCase) >= 0) return false;
                                         if (lb.IndexOf("蹒跚", StringComparison.OrdinalIgnoreCase) >= 0) return false; // CN label hint
                                     }
-                                    catch { }
+                                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                                     return true;
                                 })
                                 .ToList();
@@ -138,7 +138,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                                 var kind = kinds.OrderBy(_ => rand.Next()).FirstOrDefault();
                                 if (kind == null) break;
                                 // 保险：过滤掉任何人形单位
-                                try { if (kind.race?.race?.Humanlike == true) continue; } catch { }
+                                try { if (kind.race?.race?.Humanlike == true) continue; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                                 if (!CellFinder.TryFindRandomCellNear(dropCenter, map, 12, c => c.Standable(map) && !c.Fogged(map), out var cell)) cell = dropCenter;
                                 var pawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(kind, hostileFaction, PawnGenerationContext.NonPlayer, map.Tile, forceGenerateNewPawn: true));
                                 if (GenSpawn.Spawn(pawn, cell, map, WipeMode.Vanish) != null)
@@ -147,7 +147,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                                     spawned++;
                                 }
                             }
-                            catch { }
+                            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                         }
                     }
 
@@ -157,7 +157,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         var msg = "RimAI.Core.World.Subspace.Invoke.Start".Translate(tier, composition);
                         Messages.Message(msg, MessageTypeDefOf.ThreatSmall);
                     }
-                    catch { }
+                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                     return new SubspaceInvocationOutcome { Tier = tier, Composition = composition, Count = Math.Max(spawned, 0) };
                 }

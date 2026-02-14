@@ -32,7 +32,7 @@ namespace RimAI.Core.Source.Modules.Tooling.Indexing
 				var toolNames = tools.Select(x => x.Name ?? string.Empty).ToList();
 				Verse.Log.Message($"[RimAI.Core][P4] tools=[{string.Join(", ", toolNames)}] count={toolNames.Count}");
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
 			foreach (var t in tools)
 			{
@@ -53,7 +53,7 @@ namespace RimAI.Core.Source.Modules.Tooling.Indexing
 						var head = (vec ?? Array.Empty<float>()).Take(3).Select(x => x.ToString("0.###", CultureInfo.InvariantCulture));
 						Verse.Log.Message($"[RimAI.Core][P4] vec tool={t.Name} variant={p.variant} head=[{string.Join(", ", head)}] len={vec.Length}");
 					}
-					catch { }
+					catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					records.Add(new ToolEmbeddingRecord
 					{
 						Id = Guid.NewGuid().ToString("N"),

@@ -46,7 +46,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 					return;
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		public static string TryReuseExistingConvKey(IHistoryService history, System.Collections.Generic.IReadOnlyList<string> participantIds, string fallbackConvKey)
@@ -73,7 +73,7 @@ namespace RimAI.Core.Source.UI.ChatWindow.Parts
 					if (string.Equals(list[0], wanted[0], System.StringComparison.Ordinal) && string.Equals(list[1], wanted[1], System.StringComparison.Ordinal)) return ck;
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			return fallbackConvKey;
 		}
 	}

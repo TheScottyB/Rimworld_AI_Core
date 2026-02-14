@@ -99,7 +99,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                             Messages.Message(msg, MessageTypeDefOf.NeutralEvent);
                         }
                     }
-                    catch { }
+                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                     return true;
                 }

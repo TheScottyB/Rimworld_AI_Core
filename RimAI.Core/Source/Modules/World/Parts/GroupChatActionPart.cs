@@ -59,8 +59,8 @@ namespace RimAI.Core.Source.Modules.World.Parts
                     if (pawn == null) return Task.CompletedTask;
                     var mapRef = pawn.Map; if (mapRef == null) return Task.CompletedTask;
                     Color color = Color.white;
-                    try { color = Color.white; } catch { }
-                    try { MoteMaker.ThrowText(pawn.DrawPos, mapRef, text, color, 2f); } catch { }
+                    try { color = Color.white; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                    try { MoteMaker.ThrowText(pawn.DrawPos, mapRef, text, color, 2f); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                     return Task.CompletedTask;
                 }
                 catch { return Task.CompletedTask; }
@@ -88,8 +88,8 @@ namespace RimAI.Core.Source.Modules.World.Parts
                     }
                     if (target == null || mapRef == null) return Task.CompletedTask;
                     Color color = Color.white;
-                    try { color = Color.white; } catch { }
-                    try { MoteMaker.ThrowText(target.DrawPos, mapRef, text, color, 2f); } catch { }
+                    try { color = Color.white; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                    try { MoteMaker.ThrowText(target.DrawPos, mapRef, text, color, 2f); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                     return Task.CompletedTask;
                 }
                 catch { return Task.CompletedTask; }
@@ -140,11 +140,11 @@ namespace RimAI.Core.Source.Modules.World.Parts
                     try
                     {
                         var center = CellFinder.RandomClosewalkCellNear(initiator.Position, initiator.Map, gatherRadius);
-                        try { if (initiator.drafter != null) initiator.drafter.Drafted = false; } catch { }
+                        try { if (initiator.drafter != null) initiator.drafter.Drafted = false; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                         initiator.jobs?.StartJob(new Job(JobDefOf.Goto, center), JobCondition.InterruptForced, null, resumeCurJobAfterwards: false);
                         initiator.jobs?.jobQueue?.EnqueueLast(new Job(JobDefOf.Wait));
                     }
-                    catch { }
+                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                     foreach (var pid in state.ParticipantLoadIds)
                     {
@@ -161,13 +161,13 @@ namespace RimAI.Core.Source.Modules.World.Parts
                             var dest = CellFinder.RandomClosewalkCellNear(initiator.Position, initiator.Map, gatherRadius);
                             try
                             {
-                                try { if (pawn.drafter != null) pawn.drafter.Drafted = false; } catch { }
+                                try { if (pawn.drafter != null) pawn.drafter.Drafted = false; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                                 pawn.jobs?.StartJob(new Job(JobDefOf.Goto, dest), JobCondition.InterruptForced, null, resumeCurJobAfterwards: false);
                                 pawn.jobs?.jobQueue?.EnqueueLast(new Job(JobDefOf.Wait));
                             }
-                            catch { }
+                            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                         }
-                        catch { }
+                        catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                     }
 
                     var startedUtc = DateTime.UtcNow;
@@ -201,11 +201,11 @@ namespace RimAI.Core.Source.Modules.World.Parts
                                 }
                                 if (pawn == null) { abort = true; break; }
                                 bool drafted = false, downed = false, mental = false, hunger = false, rest = false;
-                                try { drafted = pawn.Drafted; } catch { }
-                                try { downed = pawn.Downed; } catch { }
-                                try { mental = pawn.mindState?.mentalStateHandler?.InMentalState ?? false; } catch { }
-                                try { var cat = pawn.needs?.food?.CurCategory; hunger = (cat == HungerCategory.UrgentlyHungry || cat == HungerCategory.Starving); } catch { }
-                                try { var rc = pawn.needs?.rest?.CurCategory; rest = (rc == RestCategory.VeryTired || rc == RestCategory.Exhausted); } catch { }
+                                try { drafted = pawn.Drafted; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                                try { downed = pawn.Downed; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                                try { mental = pawn.mindState?.mentalStateHandler?.InMentalState ?? false; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                                try { var cat = pawn.needs?.food?.CurCategory; hunger = (cat == HungerCategory.UrgentlyHungry || cat == HungerCategory.Starving); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                                try { var rc = pawn.needs?.rest?.CurCategory; rest = (rc == RestCategory.VeryTired || rc == RestCategory.Exhausted); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                                 if (drafted || downed || mental || hunger || rest) { abort = true; break; }
                                 try
                                 {
@@ -227,13 +227,13 @@ namespace RimAI.Core.Source.Modules.World.Parts
                                                         int v = (int)f.GetValue(ms);
                                                         if (v > 0 && ticksNow - v <= 120) { abort = true; break; }
                                                     }
-                                                    catch { }
+                                                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                                                 }
                                             }
                                         }
                                     }
                                 }
-                                catch { }
+                                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                                 if (abort) break;
                             }
 
@@ -258,14 +258,14 @@ namespace RimAI.Core.Source.Modules.World.Parts
                                             pawn.jobs?.jobQueue?.EnqueueLast(new Job(JobDefOf.Wait));
                                         }
                                     }
-                                    catch { }
+                                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                                 }
                             }
                         }
                         catch { abort = true; }
                         if (abort)
                         {
-                            try { await EndAsync(handle, "Aborted", CancellationToken.None).ConfigureAwait(false); } catch { }
+                            try { await EndAsync(handle, "Aborted", CancellationToken.None).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                         }
                     }, CancellationToken.None);
 
@@ -281,7 +281,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
             if (!_sessions.TryRemove(handle.Id, out var state)) return Task.FromResult(false);
             state.Aborted = string.Equals(reason, "Aborted", StringComparison.OrdinalIgnoreCase);
             state.Completed = !state.Aborted;
-            try { state.Periodic?.Dispose(); } catch { }
+            try { state.Periodic?.Dispose(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             var timeoutMs = _cfg.GetWorldDataConfig().DefaultTimeoutMs;
             var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
             cts.CancelAfter(Math.Max(timeoutMs, 2000));
@@ -315,11 +315,11 @@ namespace RimAI.Core.Source.Modules.World.Parts
                                     var wander = new Job(JobDefOf.GotoWander);
                                     pawn.jobs?.StartJob(wander, JobCondition.InterruptOptional, null, resumeCurJobAfterwards: false);
                                 }
-                                catch { }
+                                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                             }
-                            catch { }
+                            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                         }
-                        catch { }
+                        catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                     }
                     return true;
                 }
@@ -340,7 +340,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                 const int ThreeHoursTicks = 3 * 2500;
                 if (state.StartedTicks > 0 && ticksNow > 0 && ticksNow - state.StartedTicks >= ThreeHoursTicks) return false;
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             // 同时保留墙钟时间的上限
             if ((DateTime.UtcNow - state.StartedUtc) > state.MaxDuration) return false;
             return true;

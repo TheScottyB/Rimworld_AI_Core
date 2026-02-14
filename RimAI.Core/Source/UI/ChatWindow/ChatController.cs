@@ -54,7 +54,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 				ConvKey = convKey,
 				ParticipantIds = participantIds
 			};
-			// try { Verse.Log.Message($"[RimAI.Core][P10] ChatController ctor conv={convKey} pids={participantIds?.Count ?? 0}"); } catch { }
+			// try { Verse.Log.Message($"[RimAI.Core][P10] ChatController ctor conv={convKey} pids={participantIds?.Count ?? 0}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		public async Task StartAsync()
@@ -68,7 +68,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 				// 为避免工具 JSON 污染对话，在 ChatUI 载入时使用原始历史并过滤 type=tool_call
 				var rawList = await _history.GetAllEntriesRawAsync(State.ConvKey).ConfigureAwait(false);
 				string playerName = "RimAI.Common.Player".Translate().ToString();
-				try { playerName = await _world.GetPlayerNameAsync().ConfigureAwait(false) ?? "RimAI.Common.Player".Translate().ToString(); } catch { }
+				try { playerName = await _world.GetPlayerNameAsync().ConfigureAwait(false) ?? "RimAI.Common.Player".Translate().ToString(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				if (rawList != null)
 				{
 					foreach (var r in rawList)
@@ -85,7 +85,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 							if (string.Equals(type, "tool_call", System.StringComparison.OrdinalIgnoreCase)) continue;
 							displayText = jo.Value<string>("content") ?? displayText;
 						}
-						catch { }
+						catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 						// 计算显示名：用户采用当前称谓或玩家名；AI 采用实际小人名
 						string displayName;
 						if (r.Role == EntryRole.User)
@@ -112,7 +112,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 									var nm = await GetPawnDisplayNameAsync(System.Threading.CancellationToken.None).ConfigureAwait(false);
 									if (!string.IsNullOrWhiteSpace(nm)) displayName = nm;
 								}
-								catch { }
+								catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 							}
 						}
 						var msg = new ChatMessage
@@ -127,19 +127,19 @@ namespace RimAI.Core.Source.UI.ChatWindow
 						State.PendingInitMessages.Enqueue(msg);
 					}
 				}
-				// try { var ms = (int)(DateTime.UtcNow - t0).TotalMilliseconds; Verse.Log.Message($"[RimAI.Core][P10] ChatController.StartAsync done msgs={State.PendingInitMessages?.Count} elapsed={ms}ms"); } catch { }
+				// try { var ms = (int)(DateTime.UtcNow - t0).TotalMilliseconds; Verse.Log.Message($"[RimAI.Core][P10] ChatController.StartAsync done msgs={State.PendingInitMessages?.Count} elapsed={ms}ms"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		public async Task SendSmalltalkAsync(string userText, CancellationToken ct = default)
 		{
-			// try { Verse.Log.Message($"[RimAI.Core][P10] SendSmalltalk begin len={userText?.Length ?? 0}"); } catch { }
+			// try { Verse.Log.Message($"[RimAI.Core][P10] SendSmalltalk begin len={userText?.Length ?? 0}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			CancelStreaming();
 			_streamCts = CancellationTokenSource.CreateLinkedTokenSource(ct);
 			var linked = _streamCts.Token;
 			// 预先清空上一次会话可能遗留的电路状态
-			try { RimAI.Core.Source.Modules.LLM.LlmPolicies.ResetCircuit("stream:" + (State.ConvKey ?? "-")); } catch { }
+			try { RimAI.Core.Source.Modules.LLM.LlmPolicies.ResetCircuit("stream:" + (State.ConvKey ?? "-")); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			State.IsStreaming = true;
             // 新会话开始：复位 Finish 指示灯，并推进流式会话编号，屏蔽旧流的延迟包
             State.Indicators.FinishOn = false;
@@ -162,7 +162,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 				var playerId = GetPlayerIdOrNull() ?? "player:unknown";
 				await _history.AppendRecordAsync(State.ConvKey, "ChatUI", playerId, "chat", userText ?? string.Empty, advanceTurn: false, ct: linked).ConfigureAwait(false);
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
 			var aiMsg = new ChatMessage
 			{
@@ -181,7 +181,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 				try
 				{
 					// 如果会话包含服务器参与者，则切换到 ServerChat 作用域
-					var hasServer = false; try { foreach (var p in State.ParticipantIds) { if (p != null && (p.StartsWith("server:") || p.StartsWith("thing:"))) { hasServer = true; break; } } } catch { }
+					var hasServer = false; try { foreach (var p in State.ParticipantIds) { if (p != null && (p.StartsWith("server:") || p.StartsWith("thing:"))) { hasServer = true; break; } } } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					var scope = hasServer ? PromptScope.ServerChat : PromptScope.ChatUI;
 					var req = new PromptBuildRequest { Scope = scope, ConvKey = State.ConvKey, ParticipantIds = State.ParticipantIds, PawnLoadId = TryGetPawnLoadId(), IsCommand = false, Locale = null, UserInput = userText };
 					var prompt = await _prompting.BuildAsync(req, linked).ConfigureAwait(false);
@@ -216,13 +216,13 @@ namespace RimAI.Core.Source.UI.ChatWindow
 						}
 					}
 					// 流完成后：在控制器侧统一合并残余分片并尝试写入最终历史（独立于 UI 是否在绘制）
-					try { await TryFinalizeStreamingAndCommitAsync().ConfigureAwait(false); } catch { }
+					try { await TryFinalizeStreamingAndCommitAsync().ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				}
-				catch (OperationCanceledException) { }
-				catch (Exception) { }
+				catch (OperationCanceledException ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+				catch (Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				finally
 				{
-					try { _streamCts?.Dispose(); } catch { }
+					try { _streamCts?.Dispose(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					_streamCts = null;
 					State.IsStreaming = false;
 					// 中断情况下，确保指示灯复位，避免 UI 假性“忙碌”
@@ -234,12 +234,12 @@ namespace RimAI.Core.Source.UI.ChatWindow
 
 		public async Task SendCommandAsync(string userText, CancellationToken ct = default)
 		{
-			// try { Verse.Log.Message($"[RimAI.Core][P10] SendCommand begin len={userText?.Length ?? 0}"); } catch { }
+			// try { Verse.Log.Message($"[RimAI.Core][P10] SendCommand begin len={userText?.Length ?? 0}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			CancelStreaming();
 			_streamCts = CancellationTokenSource.CreateLinkedTokenSource(ct);
 			var linked = _streamCts.Token;
 			// 预先清空上一次会话可能遗留的电路状态（编排路径不走流式，但保持一致性）
-			try { RimAI.Core.Source.Modules.LLM.LlmPolicies.ResetCircuit("chat:" + (State.ConvKey ?? "-")); } catch { }
+			try { RimAI.Core.Source.Modules.LLM.LlmPolicies.ResetCircuit("chat:" + (State.ConvKey ?? "-")); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			State.IsStreaming = true;
             // 新会话开始：复位 Finish 指示灯，并推进流式会话编号，屏蔽旧流的延迟包
             State.Indicators.FinishOn = false;
@@ -262,7 +262,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 				var playerId = GetPlayerIdOrNull() ?? "player:unknown";
 				await _history.AppendRecordAsync(State.ConvKey, "ChatUI", playerId, "chat", userText ?? string.Empty, advanceTurn: false, ct: linked).ConfigureAwait(false);
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
 			var aiMsg = new ChatMessage
 			{
@@ -291,7 +291,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 						IsCommand = true,
 						Locale = _currentLocale
 					}, linked);
-					// try { Verse.Log.Message($"[RimAI.Core][P12] Orchestration done ok={result != null}"); } catch { }
+					// try { Verse.Log.Message($"[RimAI.Core][P12] Orchestration done ok={result != null}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
 					// 显示一次过程说明（PlanTrace 首条）到 UI（历史写入已由编排完成）
 					bool hasPlanTrace = false;
@@ -302,7 +302,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 							aiMsg.Text = result.PlanTrace[0] ?? string.Empty;
 							hasPlanTrace = !string.IsNullOrWhiteSpace(aiMsg.Text);
 						}
-						catch { }
+						catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					}
 
 					// 若存在 PlanTrace，则为“LLM 汇总”单独插入一条新的 AI 占位消息，确保 UI 显示为两行
@@ -336,14 +336,14 @@ namespace RimAI.Core.Source.UI.ChatWindow
 							var text = JsonConvert.SerializeObject(compact);
 							blocks.Add(new ContextBlock { Title = title, Text = text });
 						}
-						catch { }
+						catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					}
 
 					// 调试日志：RAG 块装载概览（用于观察工具结果是否正确注入）——放在 ExternalBlocks 注入与 Prompt.Build 之后
 
 					// 段2：RAG→LLM 真流式
 					// 命令模式：服务器参与者则用 ServerCommand，否则仍用 ChatUI
-					var hasServer2 = false; try { foreach (var p in State.ParticipantIds) { if (p != null && (p.StartsWith("server:") || p.StartsWith("thing:"))) { hasServer2 = true; break; } } } catch { }
+					var hasServer2 = false; try { foreach (var p in State.ParticipantIds) { if (p != null && (p.StartsWith("server:") || p.StartsWith("thing:"))) { hasServer2 = true; break; } } } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					var scope2 = hasServer2 ? PromptScope.ServerCommand : PromptScope.ChatUI;
 					var req2 = new PromptBuildRequest { Scope = scope2, ConvKey = State.ConvKey, ParticipantIds = State.ParticipantIds, PawnLoadId = TryGetPawnLoadId(), IsCommand = true, Locale = null, UserInput = userText, ExternalBlocks = blocks };
 					var prompt2 = await _prompting.BuildAsync(req2, linked).ConfigureAwait(false);
@@ -356,7 +356,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 						if (preview.Length > 4000) preview = preview.Substring(0, 4000) + "...";
 						Verse.Log.Message("[RimAI.Core][P12] Command Summary SystemPayload\nconv=" + State.ConvKey + "\n" + preview);
 					}
-					catch { }
+					catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					// 从发送给 LLM 的上下文中排除 PlanTrace，以避免模型复述“过程说明”；
 					// 同时占位的“LLM 汇总”消息为空，将在 BuildMessagesArray 中被自动忽略。
 					System.Collections.Generic.IReadOnlyList<ChatMessage> visibleForLlm = State.Messages;
@@ -395,15 +395,15 @@ namespace RimAI.Core.Source.UI.ChatWindow
 						}
 					}
 					// 流完成后：在控制器侧统一合并残余分片并尝试写入最终历史（独立于 UI 是否在绘制）
-					try { await TryFinalizeStreamingAndCommitAsync().ConfigureAwait(false); } catch { }
+					try { await TryFinalizeStreamingAndCommitAsync().ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					// 流结束或提前中断时，确保 State.IsStreaming 复位
 					State.IsStreaming = false;
 				}
-				catch (OperationCanceledException) { }
-				catch (Exception) { }
+				catch (OperationCanceledException ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+				catch (Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				finally
 				{
-					try { _streamCts?.Dispose(); } catch { }
+					try { _streamCts?.Dispose(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 					_streamCts = null;
 					State.IsStreaming = false;
 					// 中断情况下，确保指示灯复位，避免 UI 假性“忙碌”
@@ -417,7 +417,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 		{
 			// 标记会话为新流并先取消旧 CTS，然后短延迟，避免尾包竞争
 			unchecked { State.ActiveStreamId++; }
-			try { _streamCts?.Cancel(); } catch { }
+			try { _streamCts?.Cancel(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			// 若仍在流式，删除最后一次用户发言及半生成的 AI，并把文本归还输入框；清空剩余 chunk
 			if (State.IsStreaming)
 			{
@@ -452,7 +452,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 				State.Indicators.FinishOn = false;
 				State.IsStreaming = false;
 				// 5) 失效 Framework 会话缓存（防止上游缓存导致下一次响应延迟）；避免在 UI 线程阻塞
-				_ = Task.Run(async () => { try { await _llm.InvalidateConversationCacheAsync(State.ConvKey); } catch { } });
+				_ = Task.Run(async () => { try { await _llm.InvalidateConversationCacheAsync(State.ConvKey); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } });
 			}
 		}
 
@@ -469,7 +469,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 			{
 				var pawnId = TryGetPawnLoadId();
 				string speaker = pawnId.HasValue ? ($"pawn:{pawnId.Value}") : GetFirstPawnIdOrNull() ?? "agent:stage";
-				try { await _history.AppendRecordAsync(State.ConvKey, "ChatUI", speaker, "chat", final, advanceTurn: true).ConfigureAwait(false); State.FinalCommittedThisTurn = true; } catch { }
+				try { await _history.AppendRecordAsync(State.ConvKey, "ChatUI", speaker, "chat", final, advanceTurn: true).ConfigureAwait(false); State.FinalCommittedThisTurn = true; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
 		}
 
@@ -526,7 +526,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 					}
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		public async Task TryFinalizeStreamingAndCommitAsync()
@@ -551,9 +551,9 @@ namespace RimAI.Core.Source.UI.ChatWindow
 						await _reaction.EnqueuePawnSmalltalkReactionAsync(State.ConvKey, State.ParticipantIds, lastUser, lastAi, locale, title).ConfigureAwait(false);
 					}
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		private int? TryGetPawnLoadId()
@@ -569,7 +569,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 					}
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			return null;
 		}
 
@@ -585,7 +585,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 					}
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			return null;
 		}
 
@@ -601,7 +601,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 					}
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			return null;
 		}
 
@@ -617,7 +617,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 					}
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			return false;
 		}
 
@@ -644,7 +644,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 					return Task.FromResult($"SN-{thingId.Value:X}");
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			return Task.FromResult("AI Server");
 		}
 
@@ -660,7 +660,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 					if (!string.IsNullOrWhiteSpace(name)) return name;
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			return "RimAI.Common.Pawn".Translate().ToString();
 		}
 
@@ -718,7 +718,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 				}
 				Verse.Log.Message(sb.ToString());
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		// 构造严格的两条消息用于命令模式总结阶段：1 system + 1 user

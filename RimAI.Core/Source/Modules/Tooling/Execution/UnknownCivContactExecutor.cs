@@ -47,7 +47,7 @@ namespace RimAI.Core.Source.Modules.Tooling.Execution
                         var worldSvc = RimAICoreMod.Container.Resolve<IWorldActionService>();
                         worldSvc?.ShowTopLeftMessageAsync("RimAI.Tool.RequireAntennaPowered".Translate(), MessageTypeDefOf.RejectInput);
                     }
-                    catch { }
+                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                     return new { ok = false, error = "REQUIRE_ANTENNA_POWERED" };
                 }
 
@@ -59,7 +59,7 @@ namespace RimAI.Core.Source.Modules.Tooling.Execution
                 var action = RimAICoreMod.Container.Resolve<IWorldActionService>();
                 // 读取当前绝对 tick（Verse）放到主线程
                 long nowAbs = 0;
-                try { nowAbs = await wds.GetNowAbsTicksAsync(ct).ConfigureAwait(false); } catch { }
+                try { nowAbs = await wds.GetNowAbsTicksAsync(ct).ConfigureAwait(false); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 var result = ApplyContactAndMaybeGiftInternal(persistence, action, nowAbs);
 
                 object payload = new
@@ -87,7 +87,7 @@ namespace RimAI.Core.Source.Modules.Tooling.Execution
             {
         seed = await wds.GetCurrentMapCipherSeedAsync(ct).ConfigureAwait(false);
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
             var rng = new System.Random(seed);
             int len = rng.Next(28, 56);
@@ -130,7 +130,7 @@ namespace RimAI.Core.Source.Modules.Tooling.Execution
             int delta = rng.Next(-5, 16); // [-5, +15]
             uc.Favor = Math.Max(-100, Math.Min(100, uc.Favor + delta));
 
-            try { world?.ShowTopLeftMessageAsync("RimAI.UnknownCiv.FavorChanged".Translate(delta), MessageTypeDefOf.NeutralEvent); } catch { }
+            try { world?.ShowTopLeftMessageAsync("RimAI.UnknownCiv.FavorChanged".Translate(delta), MessageTypeDefOf.NeutralEvent); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
             bool gift = false; string note = string.Empty; int cooldownSec = 0;
             int minTicks = 3 * 60000; // 3 天
@@ -143,8 +143,8 @@ namespace RimAI.Core.Source.Modules.Tooling.Execution
                 uc.NextGiftAllowedAbsTicks = (int)(nowAbs + nextWindow);
                 cooldownSec = (int)(nextWindow / 60); // 60 tick ~= 1s（近似）
                 note = "RimAI.UnknownCiv.GiftIncoming".Translate().CapitalizeFirst();
-                try { world?.ShowTopLeftMessageAsync(note, MessageTypeDefOf.PositiveEvent); } catch { }
-                try { _ = world?.DropUnknownCivGiftAsync(UnknownCivLogic.GiftCoeff); } catch { }
+                try { world?.ShowTopLeftMessageAsync(note, MessageTypeDefOf.PositiveEvent); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                try { _ = world?.DropUnknownCivGiftAsync(UnknownCivLogic.GiftCoeff); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             }
             else
             {

@@ -26,7 +26,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
             cts.CancelAfter(timeoutMs);
             return _scheduler.ScheduleOnMainThreadAsync(() =>
             {
-                try { Messages.Message(text, type ?? MessageTypeDefOf.NeutralEvent); } catch { }
+                try { Messages.Message(text, type ?? MessageTypeDefOf.NeutralEvent); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 return Task.CompletedTask;
             }, name: "World.ShowTopLeftMessage", ct: cts.Token);
         }
@@ -60,7 +60,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         var startMsg = "RimAI.Core.World.Weather.Force.Start".Translate(label, days);
                         Messages.Message(startMsg, MessageTypeDefOf.PositiveEvent);
                     }
-                    catch { }
+                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                     // End notice: schedule a one-off message around expected expiry (game ticks based)
                     try
@@ -86,16 +86,16 @@ namespace RimAI.Core.Source.Modules.World.Parts
                                             var endMsg = "RimAI.Core.World.Weather.Force.End".Translate(label);
                                             Messages.Message(endMsg, MessageTypeDefOf.NeutralEvent);
                                         }
-                                        catch { }
-                                        try { periodic?.Dispose(); } catch { }
+                                        catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+                                        try { periodic?.Dispose(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                                     }
                                 }
-                                catch { }
+                                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                                 await Task.CompletedTask;
                             },
                             CancellationToken.None);
                     }
-                    catch { }
+                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                     return true;
                 }
                 catch { return false; }

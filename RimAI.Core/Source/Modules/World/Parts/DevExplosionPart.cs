@@ -58,7 +58,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
 						foreach (var p in map.mapPawns?.AllPawnsSpawned ?? Enumerable.Empty<Pawn>())
 						{
 							if (p == null || p.Dead) continue;
-							try { if (p.Faction != null && p.Faction.HostileTo(Faction.OfPlayer)) hostiles.Add(p); } catch { }
+							try { if (p.Faction != null && p.Faction.HostileTo(Faction.OfPlayer)) hostiles.Add(p); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 						}
 						if (hostiles.Count == 0) return -1; // 没有敌人：终止序列
 

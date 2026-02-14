@@ -97,7 +97,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 		public override void PreOpen()
 		{
 			// 互斥：打开本窗口前，若服务器聊天窗口已开启，则将其关闭
-			try { Verse.Find.WindowStack?.TryRemove(typeof(RimAI.Core.Source.UI.ServerChatWindow.ServerChatWindow), true); } catch { }
+			try { Verse.Find.WindowStack?.TryRemove(typeof(RimAI.Core.Source.UI.ServerChatWindow.ServerChatWindow), true); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			base.PreOpen();
 		}
 
@@ -170,7 +170,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 					}
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			// 若控制器中有缓存的最后一次用户输入，则恢复到输入框
 			if (!string.IsNullOrEmpty(_controller.State.LastUserInputStash))
 			{
@@ -182,7 +182,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 		public override void PreClose()
 		{
 			base.PreClose();
-			try { _healthCts?.Cancel(); } catch { }
+			try { _healthCts?.Cancel(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		private string BuildLcdText()
@@ -266,14 +266,14 @@ namespace RimAI.Core.Source.UI.ChatWindow
 						}
 					}
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				if (string.IsNullOrEmpty(playerId)) playerId = GetOrCreatePlayerSessionId();
 				var pids = new System.Collections.Generic.List<string> { entityId, playerId };
 				var convKey = BuildConvKey(pids);
 				convKey = Parts.ConversationSwitching.TryReuseExistingConvKey(_history, pids, convKey);
 				_ = _history.AppendRecordAsync(convKey, "ChatUI", GetOrCreatePlayerSessionId(), "chat", userText, advanceTurn: false);
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		private void BackToChatAndRefresh()
@@ -283,8 +283,8 @@ namespace RimAI.Core.Source.UI.ChatWindow
 			_lastTranscriptContentHeight = 0f;
 			_scrollTranscript = new Vector2(0f, float.MaxValue);
 			// 清理历史页缓存，确保下次进入立即刷新
-			try { _historyView?.ClearCache(); } catch { }
-			try { _personaView?.ClearCache(); } catch { }
+			try { _historyView?.ClearCache(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
+			try { _personaView?.ClearCache(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		private void SwitchConversationToPawn(Verse.Pawn pawn)
@@ -312,7 +312,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 						}
 					}
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				if (string.IsNullOrEmpty(playerId)) playerId = GetOrCreatePlayerSessionId();
 				participantIds.Add(playerId);
 				participantIds.Sort(System.StringComparer.Ordinal);
@@ -326,7 +326,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 				// 切回聊天并刷新
 				BackToChatAndRefresh();
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		private void DrawFixedPromptTab(Rect inRect)
@@ -340,7 +340,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 			if (_titleSettingsView == null) _titleSettingsView = new Parts.TitleSettingsTabView();
 			var loc = _container.Resolve<ILocalizationService>();
 			var cfg = _container.Resolve<IConfigurationService>();
-			_titleSettingsView.Draw(inRect, loc, cfg, _ => { try { RefreshPlayerTitle(); } catch { } });
+			_titleSettingsView.Draw(inRect, loc, cfg, _ => { try { RefreshPlayerTitle(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } });
 		}
 
 		private void AppendToLastAiMessage(string delta)
@@ -419,10 +419,10 @@ namespace RimAI.Core.Source.UI.ChatWindow
 			if (_pawn == null) { _pawnPortrait = null; return; }
 			if (_pawnPortrait == null)
 			{
-				// try { Verse.Log.Message($"[RimAI.Core][P10] Build pawn portrait begin id={_pawn?.thingIDNumber ?? 0}"); } catch { }
+				// try { Verse.Log.Message($"[RimAI.Core][P10] Build pawn portrait begin id={_pawn?.thingIDNumber ?? 0}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				var sz = new Vector2(size, size);
 				_pawnPortrait = PortraitsCache.Get(_pawn, sz, Rot4.South);
-				// try { Verse.Log.Message("[RimAI.Core][P10] Build pawn portrait done"); } catch { }
+				// try { Verse.Log.Message("[RimAI.Core][P10] Build pawn portrait done"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
 		}
 
@@ -440,7 +440,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 				}
 				_controller.State.PlayerTitle = title;
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		private async System.Threading.Tasks.Task PollHealthAsync(System.Threading.CancellationToken ct)
@@ -457,7 +457,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 						_healthPercent = (snap.Consciousness + snap.Moving + snap.Manipulation + snap.Sight + snap.Hearing + snap.Talking + snap.Breathing + snap.BloodPumping + snap.BloodFiltration + snap.Metabolism) / 10f * 100f;
 					}
 				}
-				catch { }
+				catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				await System.Threading.Tasks.Task.Delay(3000, ct);
 			}
 		}
@@ -519,7 +519,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 					locAuto?.SetDefaultLocale(gameLang);
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		private (ILLMService llm, IHistoryService history, IWorldDataService world, IOrchestrationService orchestration, IPromptService prompting, IPersonaService persona, IBiographyService biography, IIdeologyService ideology, IRecapService recap) ResolveServicesOnce()
@@ -550,9 +550,9 @@ namespace RimAI.Core.Source.UI.ChatWindow
 					title = loc?.Get(locale, "ui.chat.player_title.value", loc?.Get("en", "ui.chat.player_title.value", "governor") ?? "governor") ?? "governor";
 				}
 				_controller.State.PlayerTitle = title;
-				try { if (string.IsNullOrWhiteSpace(cfg?.GetPlayerTitleOrDefault())) cfg?.SetPlayerTitle(title); } catch { }
+				try { if (string.IsNullOrWhiteSpace(cfg?.GetPlayerTitleOrDefault())) cfg?.SetPlayerTitle(title); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		private void SubscribeConfigAndLocaleChanges()
@@ -561,10 +561,10 @@ namespace RimAI.Core.Source.UI.ChatWindow
 			{
 				var cfg = _container.Resolve<IConfigurationService>() as RimAI.Core.Source.Infrastructure.Configuration.ConfigurationService;
 				var loc = _container.Resolve<ILocalizationService>();
-				if (cfg != null) cfg.OnConfigurationChanged += _ => { try { _titleDirty = true; } catch { } };
-				if (loc != null) loc.OnLocaleChanged += _ => { try { _titleDirty = true; } catch { } };
+				if (cfg != null) cfg.OnConfigurationChanged += _ => { try { _titleDirty = true; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } };
+				if (loc != null) loc.OnLocaleChanged += _ => { try { _titleDirty = true; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } };
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		private void InitializeLcdRng(string convKey)
@@ -614,7 +614,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 				_pawn?.LabelCap ?? "RimAI.Common.Pawn".Translate(),
 				GetJobTitleOrNone(_pawn),
 				ref _scrollRoster,
-				onBackToChat: () => { try { if (_pawn != null) SwitchConversationToPawn(_pawn); } catch { } BackToChatAndRefresh(); _titleDirty = true; },
+				onBackToChat: () => { try { if (_pawn != null) SwitchConversationToPawn(_pawn); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } BackToChatAndRefresh(); _titleDirty = true; },
 				onSelectPawn: p => SwitchConversationToPawn(p),
 				getJobTitle: GetJobName,
 				isStreaming: _controller.State.IsStreaming
@@ -633,7 +633,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 					_titleInputInitialized = true;
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 		}
 
 		private void DrawPersonaTab(Rect rightRectOuter, Rect titleRect)
@@ -648,7 +648,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 
 		private void DrawChatMain(Rect titleRect, Rect transcriptRect, Rect indicatorRect, Rect inputRect, Rect rightRectOuter)
 		{
-			if (_titleDirty) { try { RefreshPlayerTitle(); } catch { } _titleDirty = false; }
+			if (_titleDirty) { try { RefreshPlayerTitle(); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } _titleDirty = false; }
 			Parts.ConversationHeader.Draw(titleRect, _pawnPortrait, _pawn?.LabelCap ?? "RimAI.Common.Pawn".Translate(), GetJobName(_pawn), _healthPulse, _healthPercent, _pawnDead);
 
 			var prevViewH = _lastTranscriptContentHeight;
@@ -701,7 +701,7 @@ namespace RimAI.Core.Source.UI.ChatWindow
 
 			if (_controller.State.Indicators.FinishOn && !_historyWritten)
 			{
-				try { AppendAllChunksToLastAiMessage(); _historyWritten = true; } catch { }
+				try { AppendAllChunksToLastAiMessage(); _historyWritten = true; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 				// 结束时合并残余分片后，同样吸底
 				var forcedH2 = ComputeTranscriptViewHeight(transcriptRect, _controller.State);
 				_scrollTranscript.y = forcedH2;

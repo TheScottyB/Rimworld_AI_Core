@@ -57,10 +57,10 @@ namespace RimAI.Core.Source.Modules.World.Parts
                     pawnsWealth = map.wealthWatcher?.WealthPawns ?? 0f;
                     total = map.wealthWatcher?.WealthTotal ?? (items + buildings + pawnsWealth);
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                 float storytellerWealth = 0f;
-                try { storytellerWealth = map.PlayerWealthForStoryteller; } catch { }
+                try { storytellerWealth = map.PlayerWealthForStoryteller; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                 var wealth = new WealthInfo
                 {
@@ -83,7 +83,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                         healthSum += p.health?.summaryHealth?.SummaryHealthPercent ?? 1f;
                         healthCount++;
                     }
-                    catch { }
+                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 }
                 var colony = new ColonyCombatInfo
                 {
@@ -104,7 +104,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
                             animalPoints += 0.08f * (a.kindDef?.combatPower ?? 0f);
                         }
                     }
-                    catch { }
+                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 }
                 var animals = new AnimalCombatInfo { BattleReadyCount = battleAnimals, PointsContribution = animalPoints };
 
@@ -120,13 +120,13 @@ namespace RimAI.Core.Source.Modules.World.Parts
                             mechPower += m.kindDef?.combatPower ?? 0f;
                         }
                     }
-                    catch { }
+                    catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 }
                 var mechs = new MechCombatInfo { Count = mechCount, CombatPowerSum = mechPower };
 
                 // Threat points and factors
                 float basePoints = 0f;
-                try { basePoints = StorytellerUtility.DefaultThreatPointsNow(map); } catch { }
+                try { basePoints = StorytellerUtility.DefaultThreatPointsNow(map); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                 float diffScale = 1f;
                 float adapt = 1f;
@@ -141,10 +141,10 @@ namespace RimAI.Core.Source.Modules.World.Parts
                     timeFactor = Find.Storyteller?.def?.pointsFactorFromDaysPassed?.Evaluate(GenDate.DaysPassedSinceSettle) ?? 1f;
                     days = GenDate.DaysPassedSinceSettle;
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                 FloatRange randRange = FloatRange.One;
-                try { randRange = map.IncidentPointsRandomFactorRange; } catch { }
+                try { randRange = map.IncidentPointsRandomFactorRange; } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 
                 var points = new ThreatPointBreakdown
                 {
@@ -184,7 +184,7 @@ namespace RimAI.Core.Source.Modules.World.Parts
             }
             catch (Exception ex)
             {
-                try { Log.Warning($"[RimAI.Core] RaidReadiness failed: {ex.Message}"); } catch { }
+                try { Log.Warning($"[RimAI.Core] RaidReadiness failed: {ex.Message}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 return new RaidReadinessSnapshot
                 {
                     Wealth = new WealthInfo(), Colony = new ColonyCombatInfo(), Animals = new AnimalCombatInfo(), Mechs = new MechCombatInfo(),

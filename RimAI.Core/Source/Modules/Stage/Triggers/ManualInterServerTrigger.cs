@@ -20,11 +20,11 @@ namespace RimAI.Core.Source.Modules.Stage.Triggers
         public Task OnEnableAsync(CancellationToken ct) { _enabled = true; return Task.CompletedTask; }
         public Task OnDisableAsync(CancellationToken ct) { _enabled = false; return Task.CompletedTask; }
 
-    public void ArmOnce() { _armed = true; try { _log?.Info("ManualInterServerTrigger armed once"); } catch { } }
+    public void ArmOnce() { _armed = true; try { _log?.Info("ManualInterServerTrigger armed once"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); } }
 
         public async Task RunOnceAsync(Func<StageIntent, Task<StageDecision>> submit, CancellationToken ct)
         {
-            if (!_enabled || !_armed) return; _armed = false; try { _log?.Info("ManualInterServerTrigger run"); } catch { }
+            if (!_enabled || !_armed) return; _armed = false; try { _log?.Info("ManualInterServerTrigger run"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             var auto = _stage?.TryGetAutoProvider(TargetActName);
             if (auto == null) return;
             try
@@ -35,10 +35,10 @@ namespace RimAI.Core.Source.Modules.Stage.Triggers
                     // Tag as manual so it can bypass coalesce/cooldown gates
                     intent.Origin = "Manual";
                     var decision = await submit(intent).ConfigureAwait(false);
-                    try { _log?.Info($"ManualInterServerTrigger submit outcome={decision?.Outcome} reason={decision?.Reason}"); } catch { }
+                    try { _log?.Info($"ManualInterServerTrigger submit outcome={decision?.Outcome} reason={decision?.Reason}"); } catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 }
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
         }
     }
 }

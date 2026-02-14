@@ -38,7 +38,7 @@ namespace RimAI.Core.Source.Modules.Prompting.Composers.Server
                         if (p.StartsWith("server:")) { var id = p.Substring(7); if (int.TryParse(id, out var n)) { entityId = $"thing:{n}"; break; } }
                     }
                 }
-                catch { }
+                catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
                 if (string.IsNullOrWhiteSpace(entityId)) return Task.FromResult(new ComposerOutput { SystemLines = lines, ContextBlocks = Array.Empty<ContextBlock>() });
 
                 var rec = serverSvc?.Get(entityId);
@@ -61,7 +61,7 @@ namespace RimAI.Core.Source.Modules.Prompting.Composers.Server
                     lines.Add(personaText);
                 }
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             return Task.FromResult(new ComposerOutput { SystemLines = lines, ContextBlocks = Array.Empty<ContextBlock>() });
         }
     }

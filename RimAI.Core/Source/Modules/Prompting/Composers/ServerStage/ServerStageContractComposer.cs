@@ -34,7 +34,7 @@ namespace RimAI.Core.Source.Modules.Prompting.Composers.ServerStage
 					lines.Add(line);
 				}
 			}
-			catch { }
+			catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
 			return Task.FromResult(new ComposerOutput { SystemLines = lines, ContextBlocks = Array.Empty<ContextBlock>() });
 		}
 	}

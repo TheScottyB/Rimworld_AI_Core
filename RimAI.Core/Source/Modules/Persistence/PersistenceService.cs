@@ -380,7 +380,7 @@ namespace RimAI.Core.Source.Modules.Persistence
                     }
                 }
             }
-            catch { }
+            catch (global::System.Exception ex) { RimAI.Core.Source.Infrastructure.Diagnostics.ErrorPolicy.Ignore(ex, "General", "empty-catch-fallback"); }
             Log.Message($"[RimAI.Core][P6.Persistence] op=load, nodes={stats.Nodes}, elapsed={stats.ElapsedMs}ms");
             return result;
         }
